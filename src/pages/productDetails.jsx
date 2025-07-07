@@ -3,14 +3,13 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useEffect, useState } from "react";
 import Footer from "../components/footer";
-import FavoriteGallery from "../components/favoriteGallary";
 import CollapsibleItem from "../components/collapsibleItem";
-import { FaArrowLeft } from "react-icons/fa";
 import RelatedByDesigner from "../components/relatedByDesigner";
 import ImageTextOnRight from "../components/textOnRight";
 import dresses from "../assets/red.jpg"
 //quantity para cart
 import { useCart } from "../context/cartContext";
+import paymentMethods from "../assets/paymentMethods.png"
 
 
 function ProductDetail() {
@@ -19,6 +18,8 @@ function ProductDetail() {
     const [mainImage, setMainImage] = useState(null); // <-- nuevo estado
     const [selectedSize, setSelectedSize] = useState("");
     const { dispatch } = useCart(); //define dispatch as func useCart()
+
+
 
     //cart adding items 
     const [quantity, setQuantity] = useState(1);
@@ -71,6 +72,10 @@ function ProductDetail() {
     }, [id]);
 
     if (!producto) return <div className="p-4">Cargando...</div>;
+
+        //taxes
+    const basePrice = (producto.precio / 1.16).toFixed(2);
+    const tax = (producto.precio - basePrice).toFixed(2);
 
 
 
@@ -132,9 +137,12 @@ function ProductDetail() {
                     <p className="text-lg text-gray-700 mb-2">
                         Diseñador: {producto.diseñador}
                     </p>
-                    <p className="text-xl font-semibold text-black mb-4">
-                        ${producto.precio}
+                    <p className="text-xl font-semibold text-black mb-4 space-y-1">
+                        Total: ${producto.precio.toFixed(2)} MXN <br />
+
+                        <span className="text-sm text-gray-600">+ IVA</span>
                     </p>
+
                     <p className="text-gray mb-4">{producto.descripcion}</p>
 
                     {/**Size section  */}
@@ -189,7 +197,7 @@ function ProductDetail() {
                         </button>
                     </div>
                     <img
-                        src="/src/assets/paymentMethods.png"
+                        src={paymentMethods}
                         alt="Métodos de pago"
                         className="inline w-full mt-2 centered border-t pt-2 border-b "
                     />

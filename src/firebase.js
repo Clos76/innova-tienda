@@ -37,7 +37,7 @@ const functions = getFunctions(app);
 
 //connect to emulator
 if(window.location.hostname === "localhost"){
-  connectFunctionsEmulator(functions, "localholst", 5001)
+  connectFunctionsEmulator(functions, "localhost", 5001)
 }
 
 // Exportar la base de datos, auth, storage, y functions

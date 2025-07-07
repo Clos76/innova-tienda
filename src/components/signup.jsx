@@ -13,6 +13,7 @@ export default function Signup() {
     phone: "",
     participante: "voluntario",
     subscribe: false,
+    message: "",
   });
 
   const handleChange = (e) => {
@@ -41,6 +42,7 @@ export default function Signup() {
         phone:"", 
         participante:"voluntario", 
         subscribe:false,
+        message:"",
       });
 
     }catch (error) {
@@ -143,6 +145,11 @@ export default function Signup() {
             <label htmlFor="subscribe" className="text-sm text-gray-700">
               Suscribirme al boletín informativo
             </label>
+          </div>
+
+          <div>
+            <label htmlFor="message" className="block text-sm font-medium text-gray-700">Mensaje (opcional)</label>
+            <textarea name="message" id="message" value={formData.message} onChange={handleChange} rows={4} className="mt-1 block w-full px-4 py-2 border rounded-md" placeholder="¿Hay algo más que te gustaría compartir?"></textarea>
           </div>
 
           <button

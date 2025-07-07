@@ -19,8 +19,8 @@ export default function HeaderTabs() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const paths = ['/', '/disenadores', '/patrocinadores', '/colecciones', '/eventos', '/revista'];
-  const labels = ['Innova-Tienda', 'Diseñadores', 'Patrocinadores', 'Colecciones', 'Eventos', 'Revista Digital'];
+  const paths = ['/', '/disenadores', '/patrocinadores'];//, '/colecciones', '/eventos', '/revista'
+  const labels = ['Innova-Tienda', 'Diseñadores', 'Patrocinadores' ]; //'Colecciones', 'Eventos', 'Revista Digital'
 
   const currentTab = paths.indexOf(location.pathname) === -1 ? 0 : paths.indexOf(location.pathname);
   const [value, setValue] = useState(currentTab);

@@ -5,6 +5,7 @@ import Footer from "./footer";
 import TeamPage from "./contributorCard";
 import { functions } from "../firebase"
 import { httpsCallable } from "firebase/functions";
+import paymentMethods from "../assets/paymentMethods.png"
 
 // Firebase
 // Stripe
@@ -16,10 +17,6 @@ function CartPage() {
 
   //checkout emulator
 const createCheckoutSession = httpsCallable(functions, "createCheckoutSession")
-
-
-
-
 
 
   const handleCheckout = async () => {
@@ -108,6 +105,12 @@ const createCheckoutSession = httpsCallable(functions, "createCheckoutSession")
 
   const totalItems = items.reduce((acc, item) => acc + item.cantidad, 0);
 
+  const tax = subTotal * 0.16;
+  const totalWithTax = subTotal + tax;
+
+
+
+
   return (
     <div className="p-6 bg-white min-h-screen">
       <h2 className="text-2xl font-bold mb-4">Tu Carrito</h2>
@@ -184,13 +187,14 @@ const createCheckoutSession = httpsCallable(functions, "createCheckoutSession")
                 </div>
 
                 <div className="flex justify-between">
-                  <span>Impuestos:</span>
-                  <span>-</span>
+                  <span>IVA (16%): </span>
+                  <span>${tax.toFixed(2)}</span>
+                  
                 </div>
 
                 <div className="flex justify-between font-bold pt-2 border-t">
                   <span>Total:</span>
-                  <span>${subTotal.toFixed(2)}</span>
+                  <span>${totalWithTax.toFixed(2)}</span>
                 </div>
                 <p className="text-green-600">
                   Ahoraste en total!
@@ -212,7 +216,7 @@ const createCheckoutSession = httpsCallable(functions, "createCheckoutSession")
                   <p>Usamos cajas recicladas certificadas</p>
                   <p>Opciones de pago:</p>
                   <img
-                    src="/src/assets/paymentMethods.png"
+                    src={paymentMethods}
                     alt="Métodos de pago"
                     className="inline w-full mt-2 centered border-t py-3"
                   />

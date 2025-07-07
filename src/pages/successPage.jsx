@@ -22,24 +22,25 @@ function SuccessPage() {
     const session = query.get("session_id");
     setSessionId(session);
 
-    if (session && cart.items.length > 0) {
-      setSavingOrder(true);
-      addDoc(collection(db, "ordenes"), {
-        sessionId: session,
-        items: cart.items,
-        createdAt: serverTimestamp(),
-      })
-        .then(() => {
-          // Limpiar carrito después de guardar
-          dispatch({ type: "CLEAR_CART" });
-          setSavingOrder(false);
-        })
-        .catch((err) => {
-          console.error("Error guardando orden:", err);
-          setError("No se pudo guardar la orden. Intenta más tarde.");
-          setSavingOrder(false);
-        });
-    } else {
+    if (session ) {
+      //removed since getting info from the stripe checkout page in index.js
+    //   setSavingOrder(true);
+    //   addDoc(collection(db, "ordenes"), {
+    //     sessionId: session,
+    //     items: cart.items,
+    //     createdAt: serverTimestamp(),
+    //   })
+    //     .then(() => {
+    //       // Limpiar carrito después de guardar
+    //       dispatch({ type: "CLEAR_CART" });
+    //       setSavingOrder(false);
+    //     })
+    //     .catch((err) => {
+    //       console.error("Error guardando orden:", err);
+    //       setError("No se pudo guardar la orden. Intenta más tarde.");
+    //       setSavingOrder(false);
+    //     });
+    // } else {
       // En caso no haya sesión o items
       dispatch({ type: "CLEAR_CART" });
     }

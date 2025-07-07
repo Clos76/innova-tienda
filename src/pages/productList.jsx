@@ -5,7 +5,18 @@ import { useEffect, useState } from "react";
 import BannerCarousel from "../components/carrousel"
 import Footer from "../components/footer.jsx";
 
+//carousel images
+import bannerImage from "../assets/shoes.jpg";
+import car from "../assets/shirts.jpg";
+import group from "../assets/pants.jpg";
+import girl from "../assets/male.png"
 
+const images = [
+    {src: bannerImage, alt: "Banner principal"},
+    {src:car, alt: "Chica en carro"}, 
+    {src: group, alt: "Grupo de modelos"},
+    {src: girl, alt: "Pasarela"}
+]
 
 
 function ProductList() {
@@ -34,7 +45,7 @@ function ProductList() {
         <div className="w-screen overflow-hidden p-10">
 
            <div className="mb-6">
-            <BannerCarousel/>
+            <BannerCarousel images={images} />
            </div>
 
             {/**return home container */}
