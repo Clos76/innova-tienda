@@ -93,7 +93,7 @@ exports.createCheckoutSessionHTTP = onRequest({ secrets: [stripeSecret] }, (req,
 
     try {
       const stripe = Stripe(stripeSecret.value());
-      const { items } = req.body;
+      const { items, metadata } = req.body; //add metadata for img and sizes(metadata from request)
 
       if (!items || !Array.isArray(items) || items.length === 0) {
         return res.status(400).json({ error: "Items array is required and cannot be empty" });
@@ -116,6 +116,7 @@ exports.createCheckoutSessionHTTP = onRequest({ secrets: [stripeSecret] }, (req,
         payment_method_types: ["card"],
         line_items: lineItems,
         mode: "payment",
+        metadata: metadata, //added to add imgs and sizes to session save
 
         // Enable shipping address collection
         shipping_address_collection: {
@@ -226,15 +227,41 @@ exports.stripeWebhook = onRequest(
         expand: ["data.price.product"],
       });
 
+      //extract metadata
+      const cartMetadata = session.metadata || {};
+      const cartCount = parseInt(cartMetadata.cart_count || '0');
+
+      // Reconstruct cart items with detailed info
+      const detailedCartItems = [];
+      for (let i = 0; i < cartCount; i++) {
+        const item = {
+          id: cartMetadata[`item_${i}_id`] || '',
+          talla: cartMetadata[`item_${i}_size`] || '',
+          color: cartMetadata[`item_${i}_color`] || '',
+          imagen: cartMetadata[`item_${i}_image`] || '',
+          // Get price and quantity from line items
+          nombre: lineItems.data[i]?.description || '',
+          cantidad: lineItems.data[i]?.quantity || 1,
+          precio: lineItems.data[i]?.amount_total / 100 || 0,
+        };
+        detailedCartItems.push(item);
+        console.log(`Item ${i}:`, item) //debug
+      }
+
       const resend = new Resend(resendApiKey.value());
 
+      // Enhanced product HTML with sizes and images
+      const productosHTML = detailedCartItems
+        .map(item => {
+          const tallaInfo = item.talla ? ` (Talla: ${item.talla})` : '';
+          const colorInfo = item.color ? ` (Color: ${item.color})` : '';
+          const imageHTML = item.imagen ? `<br/><img src="${item.imagen}" alt="${item.nombre}" style="width: 100px; height: 100px; object-fit: cover;">` : '';
 
-
-      // Productos
-      const productosHTML = lineItems.data
-        .map(item =>
-          `<li>${item.quantity} × ${item.description} - $${(item.amount_total / 100).toFixed(2)} MXN</li>`
-        )
+          return `<li>
+            ${item.cantidad} × ${item.nombre}${tallaInfo}${colorInfo} - $${item.precio.toFixed(2)} MXN
+            ${imageHTML}
+          </li>`;
+        })
         .join("");
 
       // Dirección si existe
@@ -248,7 +275,7 @@ exports.stripeWebhook = onRequest(
         `
         : "<p><em>No se proporcionó dirección.</em></p>";
 
-      // 💌 Correo común
+      // Correo común
       const htmlContent = (cliente = "") => `
         <h2>🧾 Confirmación de pedido ${cliente ? "para " + cliente : ""}</h2>
         <p><strong>Nombre:</strong> ${session.customer_details.name}</p>
@@ -293,24 +320,21 @@ exports.stripeWebhook = onRequest(
       //save data to firestore --address
       const db = getFirestore();
       await db.collection("ordenes").add({
-        sessionId: session.id, 
+        sessionId: session.id,
         nombre: session.customer_details.name,
         email: session.customer_details.email,
-        direccion: session.customer_details.address || null, 
-        montoTotal: session.amount_total /100, 
-        productos: lineItems.data.map(item => ({
-          nombre: item.description,
-          cantidad: item.quantity, 
-          precio: item.amount_total /100,
-        })),
+        direccion: session.customer_details.address || null,
+        montoTotal: session.amount_total / 100,
+        productos: detailedCartItems, //add rest of detailed cart items, metadata
         creado: new Date(),
+        
       }).catch(err => {
         console.error("Error al guardar la orden en Firestore:", err);
       });
 
 
 
-    return res.send({ received: true });
+      return res.send({ received: true });
     }
   }
 );

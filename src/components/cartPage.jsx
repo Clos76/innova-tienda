@@ -16,28 +16,48 @@ function CartPage() {
   const navigate = useNavigate();
 
   //checkout emulator
-const createCheckoutSession = httpsCallable(functions, "createCheckoutSession")
+  const createCheckoutSession = httpsCallable(functions, "createCheckoutSession")
 
 
   const handleCheckout = async () => {
     try {
       // Protección: si cart o cart.items no está listo
       const items = Array.isArray(cart?.items) ? cart.items : [];
-      
+
       if (items.length === 0) {
         alert("Tu carrito está vacío");
         return;
       }
 
       console.log("Sending items to checkout:", items);
-      
+
+      //create metadata to use in index.js for webhook to send items to db
+      const cartMetadata = {
+        cart_count: items.length.toString(),
+      };
+
+      // Add each item's details to metadata
+      items.forEach((item, index) => {
+        cartMetadata[`item_${index}_id`] = (item.id || '').toString();
+        cartMetadata[`item_${index}_size`] = (item.talla || '').toString(); // Note: using 'talla' from your cart
+        cartMetadata[`item_${index}_color`] = (item.color || '').toString();
+        // Truncate image URL if too long (Stripe metadata limit is 500 chars per key)
+        cartMetadata[`item_${index}_image`] = (item.imagen || '').substring(0, 400);
+        cartMetadata[`item_${index}_name`] = (item.nombre || '').toString();
+      });
+
+      console.log("Metadata being sent:", cartMetadata);
+
       // Use direct HTTP request instead of callable function
       const response = await fetch('https://us-central1-innovamoda-tienda.cloudfunctions.net/createCheckoutSessionHTTP', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ items })
+        body: JSON.stringify({ 
+          items: items,
+          metadata: cartMetadata //add the metadata to be included in db sent to index.js
+         })
       });
 
       if (!response.ok) {
@@ -46,7 +66,7 @@ const createCheckoutSession = httpsCallable(functions, "createCheckoutSession")
 
       const data = await response.json();
       const sessionId = data.sessionId;
-      
+
       if (!sessionId) {
         throw new Error("No session ID received from server");
       }
@@ -55,18 +75,18 @@ const createCheckoutSession = httpsCallable(functions, "createCheckoutSession")
 
       // Load Stripe and redirect to checkout
       const stripeJs = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
-      
+
       if (!stripeJs) {
         throw new Error("Failed to load Stripe");
       }
 
       const { error } = await stripeJs.redirectToCheckout({ sessionId });
-      
+
       if (error) {
         console.error("Stripe redirect error:", error);
         alert("Error al redirigir al checkout: " + error.message);
       }
-      
+
     } catch (error) {
       console.error("Error en checkout:", error);
       alert("Error al procesar el checkout. Por favor intenta de nuevo.");
@@ -189,7 +209,7 @@ const createCheckoutSession = httpsCallable(functions, "createCheckoutSession")
                 <div className="flex justify-between">
                   <span>IVA (16%): </span>
                   <span>${tax.toFixed(2)}</span>
-                  
+
                 </div>
 
                 <div className="flex justify-between font-bold pt-2 border-t">
@@ -199,8 +219,8 @@ const createCheckoutSession = httpsCallable(functions, "createCheckoutSession")
                 <p className="text-green-600">
                   Ahoraste en total!
                 </p>
-                <button 
-                  onClick={handleCheckout} 
+                <button
+                  onClick={handleCheckout}
                   className="w-full mt-4 bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
                   disabled={items.length === 0}
                 >
@@ -237,7 +257,7 @@ const createCheckoutSession = httpsCallable(functions, "createCheckoutSession")
           Volver a la tienda
         </button>
       </div>
-      
+
       <div className="mt-10">
         <TeamPage />
       </div>
