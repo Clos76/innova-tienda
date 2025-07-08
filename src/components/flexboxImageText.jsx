@@ -32,7 +32,7 @@ export default function ImageTextSection({
             {/**Text section-takes equal space due to flex-1 */}
             <motion.div className="flex-1 flex items-center justify-center" initial={{ x: -50 }} animate={{ x: 0 }} transition={{ duration: 1 }}>
                 <div className="text-left max-w-xl px-4">
-                    <h1 className="text-2xl font-bold p-4  rounded text-[#]">{title1}</h1>
+                    <h1 className="text-4xl font-bold p-4  rounded text-[#023047]">{title1}</h1>
 
                     {/**Acerca de  */}
                     <div className="mt-4">
@@ -40,7 +40,7 @@ export default function ImageTextSection({
                         </p>
                     </div>
 
-                    <h1 className="text-2xl font-bold p-4 pt-8 rounded text-[#023047]">
+                    <h1 className="text-4xl font-bold p-4 pt-8 rounded text-[#023047]">
                        {title2}
                     </h1>
                     <div className="mt-4">
@@ -49,7 +49,7 @@ export default function ImageTextSection({
                                 </p>
                     </div>
 
-                    <h1 className="text-2xl font-bold p-2  pt-8 rounded text-[#023047]">
+                    <h1 className="text-4xl font-bold p-2  pt-8 rounded text-[#023047]">
                         {title3}
                     </h1>
                     <div className="mt-4">

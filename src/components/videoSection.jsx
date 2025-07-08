@@ -20,13 +20,14 @@ export default function VideoSection({ title, videoUrl }) {
         return () => observer.disconnect();
     }, []);
 
-    const autoplayUrl = `${videoUrl}?autoplay=${isVisible ? 1 : 0}&mute=1&rel=0&showinfo=0`;
+    const videoId = videoUrl.split("/embed/")[1]; //loop function for vid
+    const autoplayUrl = `${videoUrl}?autoplay=${isVisible ? 1 : 0}&mute=1&rel=0&showinfo=0&loop=1&playlist=${videoId}`;
 
     return (
         <section className="w-full py-8 bg-white">
             <div className="w-full mx-auto px-4">
                 {title && (
-                    <h2 className="text-3xl font-bold text-black mb-4 text-center">{title}</h2>
+                    <h2 className="text-3xl font-bold text-black mb-4 text-center"></h2>
                 )}
 
                 <div className="relative w-full pt-[56.25%] rounded overflow-hidden">

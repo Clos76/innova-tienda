@@ -20,7 +20,7 @@ export default function HeaderTabs() {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const paths = ['/', '/disenadores', '/patrocinadores'];//, '/colecciones', '/eventos', '/revista'
-  const labels = ['Innova-Tienda', 'Diseñadores', 'Patrocinadores' ]; //'Colecciones', 'Eventos', 'Revista Digital'
+  const labels = ['Innova Shop', 'Diseñadores', 'Patrocinadores' ]; //'Colecciones', 'Eventos', 'Revista Digital'
 
   const currentTab = paths.indexOf(location.pathname) === -1 ? 0 : paths.indexOf(location.pathname);
   const [value, setValue] = useState(currentTab);
@@ -63,7 +63,9 @@ export default function HeaderTabs() {
   const { cart } = useCart();
 
  return (
-  <div className="w-full bg-white shadow-md">
+
+  //visual in mobile
+  <div className="w-screen bg-white shadow-md pt-6 ">
     {isMobile ? (
       <div className="flex justify-between items-center px-4 py-2 w-full">
         <IconButton edge="end" color="inherit" aria-label="menu" onClick={handleMenuClick}>
@@ -77,7 +79,8 @@ export default function HeaderTabs() {
           ))}
         </Menu>
 
-        {/* Cart icon */}
+        <div className="flex items-center gap-2">
+          {/* Cart icon */}
         <div className="relative">
           <IconButton component={Link} to="/cart" color="primary">
             🛒
@@ -89,7 +92,6 @@ export default function HeaderTabs() {
           </IconButton>
         </div>
 
-        <div className="flex items-center gap-2">
           {user && isAdmin && (
             <IconButton component={Link} to="/admin/add-product" color="primary">
               <AdminPanelSettingsIcon />
@@ -106,15 +108,27 @@ export default function HeaderTabs() {
           )}
         </div>
       </div>
-    ) : (
+    ) : ( 
+      
+      //visual to webpage
       <div className="flex justify-between items-center px-8 py-3 w-full">
         <Tabs value={value} onChange={handleChange} centered>
           {labels.map((label, index) => (
-            <Tab key={label} label={label} />
+            <Tab 
+            key={label} 
+            label={label} 
+            sx={{fontFamily: 'Playfair Display, serif',
+              fontWeight: 600,
+              fontSize: '1.25rem', 
+              textTransform: 'none'
+            }}
+            />
           ))}
         </Tabs>
 
-        {/* Cart icon */}
+        <div className="flex items-center gap-4">
+
+            {/* Cart icon */}
         <div className="relative py-3">
           <IconButton component={Link} to="/cart" color="primary">
             🛒
@@ -126,7 +140,6 @@ export default function HeaderTabs() {
           </IconButton>
         </div>
 
-        <div className="flex items-center gap-4">
           {user && isAdmin && (
             <IconButton component={Link} to="/admin/add-product" color="primary">
               <AdminPanelSettingsIcon />

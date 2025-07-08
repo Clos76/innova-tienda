@@ -12,9 +12,18 @@ export default function Footer() {
                     <Link to="/" className="hover:text-blue-400">About</Link>
                     <Link to="/disenadores" className="hover:text-blue-400">Diseñadores</Link>
                     <Link to="/patrocinadores" className="hover:text-blue-400">Patrocinadores</Link>
-                    <Link to="/colecciones" className="hover:text-blue-400">Colecciones</Link>
-                    <Link to="/eventos" className="hover:text-blue-400">Eventos</Link>
-                    <Link to="/revista" className="hover:text-blue-400">Revista Digital</Link>
+                    <a href="https://innovamoda.org/" className="hover:text-blue-400">Collecciones</a>
+                    <a href="https://innovamoda.org/encuentro/" className="hover:text-blue-400">Eventos</a>
+                    <a href="https://innovamoda.org/3d-flip-book/mayo-2025/" className="hover:text-blue-400">Revista Digital</a>
+
+                </div>
+
+                {/**Legal */}
+                <div className="flex flex-wrap justify-center gap-4 text-xl font-medium">
+                <Link to="/terminos" className="text-gray-400 hover:underline" >Terminos del Servicio</Link>
+                <Link to="/privacidad" className="text-gray-400 hover:underline">Privacidad</Link>
+                <Link to="/devoluciones" className="text-gray-400 hover:underline">Devoluciones</Link>
+                <Link to="/envios" className="text-gray-400 hover:underline">Envios</Link>
                 </div>
 
                 {/* Social Icons */}

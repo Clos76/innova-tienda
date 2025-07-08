@@ -6,6 +6,10 @@ import TeamPage from "./contributorCard";
 import { functions } from "../firebase"
 import { httpsCallable } from "firebase/functions";
 import paymentMethods from "../assets/paymentMethods.png"
+import bannerImage from "../assets/bannerInnovaModa.jpg"
+import carImage from "../assets/pants.jpg"
+import suits from "../assets/suitBanner.jpg"
+
 
 // Firebase
 // Stripe
@@ -133,7 +137,15 @@ function CartPage() {
 
   return (
     <div className="p-6 bg-white min-h-screen">
-      <h2 className="text-2xl font-bold mb-4">Tu Carrito</h2>
+
+      {/**Mini banner ontop  */}
+      <div className="w-full mb-6 rounded-md overflow-hidden grid grid-cols-1 md:grid-cols-3">
+      <img src={carImage} alt="Car image" className="w-full h-30 object-cover " />
+      <img src={bannerImage} alt="banner Image" className="w-full h-30 object-cover " />
+      <img src={suits} alt="Car image" className="w-full h-30 object-cover " />
+      </div>
+
+      <h2 className="text-2xl font-bold mb-4"></h2>
 
       {items.length === 0 ? (
         <div className="text-center py-10">

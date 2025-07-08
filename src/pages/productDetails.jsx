@@ -11,6 +11,9 @@ import dresses from "../assets/red.jpg"
 import { useCart } from "../context/cartContext";
 import paymentMethods from "../assets/paymentMethods.png"
 
+//pop up alert
+import toast from "react-hot-toast";
+
 
 function ProductDetail() {
     const { id } = useParams();
@@ -51,9 +54,24 @@ function ProductDetail() {
             }
         })
 
-        // Build alert message
-        const sizeText = selectedSize ? `Talla: ${selectedSize}, ` : "";
-        alert(`"${producto.nombre}" (${sizeText}Cantidad: ${quantity}x) agregado al carrito`);
+        // Build alert message with toast 
+        toast.custom((t) => (
+            <div className={`max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 ${t.visible ? 'animate-enter' : 'animate-leave'}`}>
+                <div className="flex-shrink-0">
+                    <img className="h-20 w-20 object-cover rounded-l-lg p-4" src={producto.imagenes[0]} alt={producto.nombre} />
+                </div>
+                <div className="flex-1 w-0 p-4">
+                    <div className="flex items-start justify-between">
+                        <p className="text-sm font-medium text-gray-900">{producto.nombre}</p>
+                        <p className="ml-2 text-sm text-gray-500">${producto.precio}</p>
+                    </div>
+                    <p className="mt-1 text-sm text-gray-500">
+                        {selectedSize ? `Talla: ${selectedSize}, ` : ""}Cantidad: {quantity}
+                    </p>
+                </div>
+            </div>
+        ), { duration: 3000 });
+
     };
 
 
@@ -73,7 +91,7 @@ function ProductDetail() {
 
     if (!producto) return <div className="p-4">Cargando...</div>;
 
-        //taxes
+    //taxes
     const basePrice = (producto.precio / 1.16).toFixed(2);
     const tax = (producto.precio - basePrice).toFixed(2);
 

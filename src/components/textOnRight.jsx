@@ -44,7 +44,7 @@ export default function ImageTextOnRight({
                 transition={{ duration: 1 }}
             >
                 <div className="text-left w-full max-w-2xl">
-                    <h1 className="text-4xl font-extrabold mb-6 text-[#222]">
+                    <h1 className="text-4xl font-extrabold mb-6 text-[#023047]">
                        {title1}
                     </h1>
 

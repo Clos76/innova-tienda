@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useCart } from "../context/cartContext";
+import Footer from "../components/footer";
+import TeamPage from "../components/contributorCard";
 
 // Importa Firestore
 import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
@@ -23,25 +25,7 @@ function SuccessPage() {
     setSessionId(session);
 
     if (session ) {
-      //removed since getting info from the stripe checkout page in index.js
-    //   setSavingOrder(true);
-    //   addDoc(collection(db, "ordenes"), {
-    //     sessionId: session,
-    //     items: cart.items,
-    //     createdAt: serverTimestamp(),
-    //   })
-    //     .then(() => {
-    //       // Limpiar carrito después de guardar
-    //       dispatch({ type: "CLEAR_CART" });
-    //       setSavingOrder(false);
-    //     })
-    //     .catch((err) => {
-    //       console.error("Error guardando orden:", err);
-    //       setError("No se pudo guardar la orden. Intenta más tarde.");
-    //       setSavingOrder(false);
-    //     });
-    // } else {
-      // En caso no haya sesión o items
+   
       dispatch({ type: "CLEAR_CART" });
     }
   }, [location, cart.items, db, dispatch]);
@@ -80,6 +64,10 @@ function SuccessPage() {
       >
         Volver a la tienda
       </a>
+      <br /><br />
+      <TeamPage />
+
+      <Footer />
     </div>
   );
 }

@@ -23,6 +23,10 @@ import CartPage from './components/cartPage';
 import SuccessPage from './pages/successPage';
 import CancelPage from './pages/cancelPage';
 
+import Terminos from './pages/terminos';
+import Privacidad from './pages/privacidad';
+import Devoluciones from './pages/devoluciones';
+import Envios from './pages/envios';
 
 
 
@@ -51,6 +55,12 @@ function App() {
         <Route path="/cart" element = {<CartPage/>} />
        <Route path="/success" element = {<SuccessPage/>} />
        <Route path="/cancel" element = {<CancelPage/>} />
+
+       <Route path="/terminos" element = {<Terminos/>} />
+       <Route path="/privacidad" element = {<Privacidad/>} />
+       <Route path="/devoluciones" element = {<Devoluciones/>} />
+       <Route path="/envios" element = {<Envios/>} />
+
 
       </Routes>
 
