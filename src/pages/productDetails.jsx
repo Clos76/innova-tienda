@@ -202,7 +202,10 @@ function ProductDetail() {
 
                     <div>
                         <button
+
                             onClick={handleAddCart}
+                            
+                            data-cy="add-to-cart"  /* add the cypress info to test */
                             className=" p-4 sm:p-8 lg:p-8 text-sm md-text-base mt-4 w-full px-6 py-2 bg-green-600 text-white hover:bg-blue-400 rounded"
                         >
                             Añadir al Carrito

@@ -24,6 +24,14 @@ function CartPage() {
 
 
   const handleCheckout = async () => {
+
+    //testing=-======
+    if(import.meta.env.MODE === "test"){
+      console.log("Test mode: skipping Stripe redirect")
+      return; // skip everthing when testing
+    }
+
+
     try {
       // Protección: si cart o cart.items no está listo
       const items = Array.isArray(cart?.items) ? cart.items : [];
@@ -158,6 +166,7 @@ function CartPage() {
             <div className="md:col-span-2">
               {items.map((item, index) => (
                 <div
+                data-cy="cart-item" //testing with cypress
                   key={index}
                   className="mb-4 p-4 rounded border bg-gray-100 flex flex-col md:flex-row justify-between items-center gap-4"
                 >
@@ -189,10 +198,13 @@ function CartPage() {
                         <FaPlus />
                       </button>
                     </div>
-
-                    <p>Precio: ${item.precio}</p>
+                    {/**data for testing items */}
+                    <p data-cy="cart-items-price"> 
+                      Precio: ${item.precio}
+                      </p>
 
                     <button
+                      data-cy="remove-item-button" // cypress testing
                       onClick={() => handleRemoveItem(item)}
                       className="text-red-500 hover:text-red-700"
                     >
@@ -209,8 +221,9 @@ function CartPage() {
 
               <div className="mt-6 border-t pt-4 text-sm text-gray-700 space-y-2">
                 <div className="flex justify-between">
-                  <span>Subtotal:</span>
-                  <span>${subTotal.toFixed(2)}</span>
+                  {/** cy testing subtotal */}
+                  <span data-cy="subtotal-label" >Subtotal:</span>
+                  <span data-cy="subtotal-value">${subTotal.toFixed(2)}</span>
                 </div>
 
                 <div className="flex justify-between">
@@ -219,21 +232,25 @@ function CartPage() {
                 </div>
 
                 <div className="flex justify-between">
-                  <span>IVA (16%): </span>
-                  <span>${tax.toFixed(2)}</span>
+                  {/** cy testing tax */}
+                  <span data-cy="tax-label" >IVA (16%): </span>
+                  <span data-cy="tax-value">${tax.toFixed(2)}</span>
 
                 </div>
 
                 <div className="flex justify-between font-bold pt-2 border-t">
-                  <span>Total:</span>
-                  <span>${totalWithTax.toFixed(2)}</span>
+                  {/** cy testing  total with tax */}
+                  <span data-cy="total-label" >Total:</span>
+                  <span data-cy="total-value">${totalWithTax.toFixed(2)}</span>
                 </div>
                 <p className="text-green-600">
                   Ahoraste en total!
                 </p>
                 <button
+              /**data-cy for testing e2e */
+                  data-cy="checkout-button"
                   onClick={handleCheckout}
-                  className="w-full mt-4 bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+                  className="w-full mt-4 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
                   disabled={items.length === 0}
                 >
                   Completar Pedido

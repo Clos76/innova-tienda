@@ -31,3 +31,7 @@ firebase-debug.log
 *.njsproj
 *.sln
 *.sw?
+
+# tests -cypress-screenshots
+cypress/screenshots
+cypress/videos

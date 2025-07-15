@@ -62,7 +62,7 @@ function ProductList() {
             <h1 className="text-2xl font-bold capitalize mb-6">Categoría: {categoria}</h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 ">
                 {productos.map(prod => (
-                    <Link to={`/producto/${prod.id}`} key={prod.id} className="bg-white p-4 shadow rounded hover:bg-gray-100">
+                    <Link to={`/producto/${prod.id}`} key={prod.id} data-cy="product-link" className="bg-white p-4 shadow rounded hover:bg-gray-100">
                         <img src={prod.imagenes?.[0]} alt={prod.nombre} className="h-48 w-full object-cover mb-2 rounded" />
                         <h2 className="text-lg font-semibold">{prod.nombre}</h2>
                         <p className="text-sm text-gray-600">{prod.diseñador}</p>

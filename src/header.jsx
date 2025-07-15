@@ -82,7 +82,7 @@ export default function HeaderTabs() {
         <div className="flex items-center gap-2">
           {/* Cart icon */}
         <div className="relative">
-          <IconButton component={Link} to="/cart" color="primary">
+          <IconButton component={Link} data-cy="cart-link" to="/cart" color="primary"> {/* data-cy ---for testing */}
             🛒
             {cart?.items?.length > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full">
@@ -130,7 +130,7 @@ export default function HeaderTabs() {
 
             {/* Cart icon */}
         <div className="relative py-3">
-          <IconButton component={Link} to="/cart" color="primary">
+          <IconButton component={Link} to="/cart" color="primary" data-cy="cart-link"> 
             🛒
             {cart?.items?.length > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full">
