@@ -9,10 +9,11 @@ export default function Footer() {
 
                 {/* Navigation links */}
                 <div className="flex flex-wrap justify-center gap-4 text-xl font-medium">
-                    <Link to="/" className="hover:text-blue-400">About</Link>
-                    <Link to="/disenadores" className="hover:text-blue-400">Diseñadores</Link>
-                    <Link to="/patrocinadores" className="hover:text-blue-400">Patrocinadores</Link>
-                    <a href="https://innovamoda.org/" className="hover:text-blue-400">Collecciones</a>
+                    <Link to="/" className="hover:text-blue-400">Inicio</Link>
+                    <Link to="/" className="hover:text-blue-400">Innova-Shop</Link>
+
+                    {/* <Link to="/disenadores" className="hover:text-blue-400">Diseñadores</Link>
+                    <Link to="/patrocinadores" className="hover:text-blue-400">Patrocinadores</Link> */}
                     <a href="https://innovamoda.org/encuentro/" className="hover:text-blue-400">Eventos</a>
                     <a href="https://innovamoda.org/3d-flip-book/mayo-2025/" className="hover:text-blue-400">Revista Digital</a>
 
@@ -20,10 +21,10 @@ export default function Footer() {
 
                 {/**Legal */}
                 <div className="flex flex-wrap justify-center gap-4 text-xl font-medium">
-                <Link to="/terminos" className="text-gray-400 hover:underline" >Terminos del Servicio</Link>
-                <Link to="/privacidad" className="text-gray-400 hover:underline">Privacidad</Link>
-                <Link to="/devoluciones" className="text-gray-400 hover:underline">Devoluciones</Link>
-                <Link to="/envios" className="text-gray-400 hover:underline">Envios</Link>
+                    <Link to="/terminos" className="text-gray-400 hover:underline" >Terminos del Servicio</Link>
+                    <Link to="/privacidad" className="text-gray-400 hover:underline">Privacidad</Link>
+                    <Link to="/devoluciones" className="text-gray-400 hover:underline">Devoluciones</Link>
+                    <Link to="/envios" className="text-gray-400 hover:underline">Envios</Link>
                 </div>
 
                 {/* Social Icons */}

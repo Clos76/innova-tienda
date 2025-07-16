@@ -7,7 +7,7 @@ import './App.css'
 //import page components 
 import Innovamoda from './pages/Innovamoda';
 import Disenadores from './pages/disenadores';
-import Patrocinadores from './pages/patrocinadores';
+import Inicio from './pages/inicio';
 import Colecciones from './pages/colecciones';
 import Eventos from './pages/eventos'
 import Revista from './pages/revista'
@@ -41,10 +41,10 @@ function App() {
       {/**Define the components and path */}
 
       <Routes>
-        <Route path="/" element={<Innovamoda />} />
-        <Route path="/disenadores" element={<Disenadores />} />
-        <Route path="/patrocinadores" element={<Patrocinadores />} />
-        <Route path="/colecciones" element={<Colecciones />} />
+        <Route path="/" element={<Inicio/>} />
+        <Route path="/innova-shop" element={<Innovamoda />} />
+        {/* <Route path="/disenadores" element={<Disenadores />} />
+        <Route path="/colecciones" element={<Colecciones />} /> */}
         <Route path="/eventos" element={<Eventos />} />
         <Route path="/revista" element={<Revista />} />
         <Route path="/productos/:categoria" element={<ProductList/>}  /> 

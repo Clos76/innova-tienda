@@ -10,6 +10,7 @@ export default function ImageTextOnRight({
     text1,
     title2, 
     text2,
+    titleClassName="",//added for extra css
 
 })
 
@@ -44,7 +45,7 @@ export default function ImageTextOnRight({
                 transition={{ duration: 1 }}
             >
                 <div className="text-left w-full max-w-2xl">
-                    <h1 className="text-4xl font-extrabold mb-6 text-[#023047]">
+                    <h1 className={`text-4xl font-extrabold mb-6 text-[#023047] ${titleClassName}`}>
                        {title1}
                     </h1>
 
@@ -52,7 +53,7 @@ export default function ImageTextOnRight({
                     {text1}
                     </p>
 
-                    <h1 className="text-4xl font-extrabold mb-6 text-[#023047]">
+                    <h1 className={`text-4xl font-extrabold mb-6 text-[#023047] ${titleClassName}`}>
                         {title2}
                     </h1>
 

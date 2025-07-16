@@ -19,8 +19,8 @@ export default function HeaderTabs() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const paths = ['/', '/disenadores', '/patrocinadores'];//, '/colecciones', '/eventos', '/revista'
-  const labels = ['Innova Shop', 'Diseñadores', 'Patrocinadores' ]; //'Colecciones', 'Eventos', 'Revista Digital'
+  const paths = ['/', '/innova-shop', '/eventos', '/revista'];//, '/colecciones', '/disenadores', '/patrocinadores'
+  const labels = ['Inicio', 'Innova Shop', 'Eventos', 'Revista Digital']; //'Colecciones', 'Diseñadores', 'Patrocinadores',
 
   const currentTab = paths.indexOf(location.pathname) === -1 ? 0 : paths.indexOf(location.pathname);
   const [value, setValue] = useState(currentTab);
@@ -62,102 +62,105 @@ export default function HeaderTabs() {
   //cart icon and counter
   const { cart } = useCart();
 
- return (
+  return (
 
-  //visual in mobile
-  <div className="w-screen bg-white shadow-md pt-6 ">
-    {isMobile ? (
-      <div className="flex justify-between items-center px-4 py-2 w-full">
-        <IconButton edge="end" color="inherit" aria-label="menu" onClick={handleMenuClick}>
-          <MenuIcon />
-        </IconButton>
-        <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
-          {labels.map((label, index) => (
-            <MenuItem key={label} onClick={(e) => handleChange(e, index)}>
-              {label}
-            </MenuItem>
-          ))}
-        </Menu>
-
-        <div className="flex items-center gap-2">
-          {/* Cart icon */}
-        <div className="relative">
-          <IconButton component={Link} data-cy="cart-link" to="/cart" color="primary"> {/* data-cy ---for testing */}
-            🛒
-            {cart?.items?.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full">
-                {cart.items.reduce((acc, item) => acc + item.cantidad, 0)}
-              </span>
-            )}
+    //visual in mobile
+    <div className="w-screen bg-white shadow-md ">
+      {isMobile ? (
+        <div className="flex justify-between items-center px-4 py-2 w-full">
+          <IconButton edge="end" color="inherit" aria-label="menu" onClick={handleMenuClick}>
+            <MenuIcon />
           </IconButton>
-        </div>
+          <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
+            {labels.map((label, index) => (
+              <MenuItem key={label} onClick={(e) => handleChange(e, index)}>
+                {label}
+              </MenuItem>
+            ))}
+          </Menu>
 
-          {user && isAdmin && (
-            <IconButton component={Link} to="/admin/add-product" color="primary">
-              <AdminPanelSettingsIcon />
-            </IconButton>
-          )}
-          {!user ? (
-            <IconButton component={Link} to="/admin" color="primary">
-              <AccountCircleIcon />
-            </IconButton>
-          ) : (
-            <IconButton onClick={handleLogout} color="primary">
-              <LogoutIcon />
-            </IconButton>
-          )}
-        </div>
-      </div>
-    ) : ( 
-      
-      //visual to webpage
-      <div className="flex justify-between items-center px-8 py-3 w-full">
-        <Tabs value={value} onChange={handleChange} centered>
-          {labels.map((label, index) => (
-            <Tab 
-            key={label} 
-            label={label} 
-            sx={{fontFamily: 'Playfair Display, serif',
-              fontWeight: 600,
-              fontSize: '1.25rem', 
-              textTransform: 'none'
-            }}
-            />
-          ))}
-        </Tabs>
+          <div className="flex items-center gap-2">
+            {/* Cart icon */}
+            <div className="relative">
+              <IconButton component={Link} data-cy="cart-link" to="/cart" color="primary"> {/* data-cy ---for testing */}
+                🛒
+                {cart?.items?.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full">
+                    {cart.items.reduce((acc, item) => acc + item.cantidad, 0)}
+                  </span>
+                )}
+              </IconButton>
+            </div>
 
-        <div className="flex items-center gap-4">
+            {user && isAdmin && (
+              <IconButton component={Link} to="/admin/add-product" color="primary">
+                <AdminPanelSettingsIcon />
+              </IconButton>
+            )}
+            {!user ? (
+              <IconButton component={Link} to="/admin" color="primary">
+                <AccountCircleIcon />
+              </IconButton>
+            ) : (
+              <IconButton onClick={handleLogout} color="primary">
+                <LogoutIcon />
+              </IconButton>
+            )}
+          </div>
+        </div>
+      ) : (
+
+        //visual to webpage
+        <div className="relative w-full py-3  px-8  flex items-center justify-between">
+          <div className="relative left-1/2 transform -translate-x-1/2 flex justify-between overflow-auto">
+               <Tabs value={value} onChange={handleChange} centered>
+            {labels.map((label, index) => (
+              <Tab
+                key={label}
+                label={label}
+                sx={{
+                  fontFamily: 'Anton, serif',
+                  fontWeight: 600,
+                  fontSize: '1.5rem',
+                  textTransform: 'none'
+                }}
+              />
+            ))}
+          </Tabs>
+          </div>
+
+          <div className="ml-auto flex flex-row items-center gap-2 ">
 
             {/* Cart icon */}
-        <div className="relative py-3">
-          <IconButton component={Link} to="/cart" color="primary" data-cy="cart-link"> 
-            🛒
-            {cart?.items?.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full">
-                {cart.items.reduce((acc, item) => acc + item.cantidad, 0)}
-              </span>
-            )}
-          </IconButton>
-        </div>
+            <div className="relative ">
+              <IconButton component={Link} to="/cart" color="primary" data-cy="cart-link">
+                🛒
+                {cart?.items?.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full">
+                    {cart.items.reduce((acc, item) => acc + item.cantidad, 0)}
+                  </span>
+                )}
+              </IconButton>
+            </div>
 
-          {user && isAdmin && (
-            <IconButton component={Link} to="/admin/add-product" color="primary">
-              <AdminPanelSettingsIcon />
-            </IconButton>
-          )}
-          {!user ? (
-            <IconButton component={Link} to="/admin" color="primary">
-              <AccountCircleIcon />
-            </IconButton>
-          ) : (
-            <IconButton onClick={handleLogout} color="primary">
-              <LogoutIcon />
-            </IconButton>
-          )}
+            {user && isAdmin && (
+              <IconButton component={Link} to="/admin/add-product" color="primary">
+                <AdminPanelSettingsIcon />
+              </IconButton>
+            )}
+            {!user ? (
+              <IconButton component={Link} to="/admin" color="primary">
+                <AccountCircleIcon />
+              </IconButton>
+            ) : (
+              <IconButton onClick={handleLogout} color="primary">
+                <LogoutIcon />
+              </IconButton>
+            )}
+          </div>
         </div>
-      </div>
-    )}
-  </div>
-);
+      )}
+    </div>
+  );
 
 }
