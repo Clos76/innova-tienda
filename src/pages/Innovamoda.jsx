@@ -11,6 +11,7 @@ import Footer from "../components/footer.jsx";
 import red from "../assets/red.png"
 import { Link } from 'react-router-dom';
 import Categorias from "../components/categorias.jsx";
+import DesignersCarousel from "./disenadores.jsx";
 
 //carousel imgs
 import bannerImage from "../assets/bannerInnovaModa.jpg";
@@ -60,7 +61,7 @@ export default function Innovamoda() {
 
 
 
-            <Categorias />
+            <DesignersCarousel/>
 
 
 

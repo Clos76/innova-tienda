@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "../firebase";  // Ajusta la ruta si es necesario
+import AddDesigner from "./addDesigner";
 
 function AddProductWithImages() {
   const [formData, setFormData] = useState({
@@ -87,6 +88,11 @@ function AddProductWithImages() {
 
   return (
     <div className="container mx-auto p-4">
+
+      <AddDesigner/>
+      <hr className="my-8 border-t" />
+
+
       <h1 className="text-2xl font-bold mb-4">Agregar Producto</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input type="text" name="categoria" value={formData.categoria} onChange={handleChange} placeholder="Categoría" className="border p-2 w-full" />
@@ -133,3 +139,5 @@ function AddProductWithImages() {
 }
 
 export default AddProductWithImages;
+
+
