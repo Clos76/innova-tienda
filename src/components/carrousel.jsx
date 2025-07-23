@@ -14,7 +14,7 @@ export default function BannerCarousel({images = []}) {
                 slidesPerView={1}
                 loop={true}
                 autoplay={{ delay: 3000 }}
-                className="h-[250px] sm:h-[350px] md:h-[450px] lg:h-[550px] xl:h-[650px] w-full" //mobile
+                className="h-[250px] sm:h-[350px] md:h-[550px] lg:h-[650px] xl:h-[750px] w-full" //mobile
             >
                 //pictures are : Medium 1280x853
                 {images.map((img, index) => (

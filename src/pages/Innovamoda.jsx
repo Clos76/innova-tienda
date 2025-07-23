@@ -63,19 +63,10 @@ export default function Innovamoda() {
 
             <DesignersCarousel/>
 
+            <Categorias/>
 
 
-
-            <ImageTextOnRight
-
-                imageSrc={dresses}
-                imageAlt="Dresses"
-                title1="Objetivo Casting de Diseñadores"
-                text1="Plataforma Tijuanense dedicada a desarrollar y promover al nuevo talento de la industria de la moda creando un espacio donde pueden demostrar su creatividad."
-                title2="Objetivo Encuentro"
-                text2="Espacio que reúne a los diseñadores ganadores de nuestro concurso y a diseñadores internacionales en una misma pasarela, complementado con conferencias magistrales donde expertos de la industria de la moda abordan distintas temáticas conforme a las tendencias del momento."
-
-            />
+        
 
             <FavoriteGallery images={favoriteImages}/>
 
@@ -95,6 +86,17 @@ export default function Innovamoda() {
             <VideoSection
                 title="Primer Video"
                 videoUrl="https://www.youtube.com/embed/rBSCpbOUHx8"
+            />
+
+                <ImageTextOnRight
+
+                imageSrc={dresses}
+                imageAlt="Dresses"
+                title1="Objetivo Casting de Diseñadores"
+                text1="Plataforma Tijuanense dedicada a desarrollar y promover al nuevo talento de la industria de la moda creando un espacio donde pueden demostrar su creatividad."
+                title2="Objetivo Encuentro"
+                text2="Espacio que reúne a los diseñadores ganadores de nuestro concurso y a diseñadores internacionales en una misma pasarela, complementado con conferencias magistrales donde expertos de la industria de la moda abordan distintas temáticas conforme a las tendencias del momento."
+
             />
             <TeamPage />
 

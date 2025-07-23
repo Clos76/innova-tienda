@@ -27,6 +27,7 @@ import Terminos from './pages/terminos';
 import Privacidad from './pages/privacidad';
 import Devoluciones from './pages/devoluciones';
 import Envios from './pages/envios';
+import DesignerProfile from './pages/perfilDisenador';
 
 
 
@@ -60,6 +61,9 @@ function App() {
        <Route path="/privacidad" element = {<Privacidad/>} />
        <Route path="/devoluciones" element = {<Devoluciones/>} />
        <Route path="/envios" element = {<Envios/>} />
+
+      <Route path="/designer/:designerId" element={<DesignerProfile/>}/>
+
 
 
       </Routes>

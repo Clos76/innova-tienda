@@ -14,6 +14,7 @@ import Medios from "../assets/InicioMedios.png"
 import Modelos from "../assets/InicioModels.png"
 import BannerCarousel from "../components/carrousel"
 import talleres from "../assets/InicioTalleres.png"
+import Signup from "../components/signup"
 
 const images = [
     {src: talleres, alt: "Banner principal"},
@@ -80,7 +81,7 @@ oportunidades para los jóvenes creativos de la industria"
 
 
 
-
+             <Signup />
 
 
 
