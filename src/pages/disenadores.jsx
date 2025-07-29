@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { collection, getDocs } from "firebase/firestore"
 import { db } from "../firebase"
+
+
 
 export default function DesignersCarousel({ onDesignerClick }) {
     const [designers, setDesigners] = useState([]);
@@ -13,6 +15,9 @@ export default function DesignersCarousel({ onDesignerClick }) {
     const [touchEnd, setTouchEnd] = useState(null);
     const [itemsPerView, setItemsPerView] = useState(1);
     const carouselRef = useRef(null);
+   // const { designerId } = useParams();
+
+
 
     // Update items per view based on screen size
     useEffect(() => {
@@ -36,16 +41,16 @@ export default function DesignersCarousel({ onDesignerClick }) {
 
     useEffect(() => {
         const fetchDesigners = async () => {
-            try{
+            try {
                 setLoading(true);
                 const snapshot = await getDocs(collection(db, "designers"));
                 const data = snapshot.docs.map(doc => ({
-                    id: doc.id, 
+                    id: doc.id,
                     ...doc.data()
                 }));
                 setDesigners(data);
                 setError(null);
-            } catch(err) {
+            } catch (err) {
                 console.error("Error fetching designers:", err);
                 setError("Error al cargar diseñadores");
             } finally {
@@ -192,12 +197,14 @@ export default function DesignersCarousel({ onDesignerClick }) {
 
                                     {/** Action button */}
                                     <div className="mt-4 sm:mt-6">
-                                        <button
-                                            onClick={() => onDesignerClick(designer)}
-                                            className="px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm text-[#0081a7] border-2 border-[#0081a7] hover:border-transparent hover:bg-[#00afb9] hover:text-white rounded-full font-semibold transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 w-full"
-                                        >
-                                            Ver Colecciones
-                                        </button>
+                                        <Link to={`/designer/${designer.id}/categories`}>
+                                            <button
+
+                                                className="px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm text-[#0081a7] border-2 border-[#0081a7] hover:border-transparent hover:bg-[#00afb9] hover:text-white rounded-full font-semibold transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 w-full"
+                                            >
+                                                Ver Colecciones
+                                            </button>
+                                        </Link>
                                     </div>
                                 </div>
                             ))}
@@ -225,11 +232,10 @@ export default function DesignersCarousel({ onDesignerClick }) {
                                 <button
                                     key={pageIndex}
                                     onClick={() => goToSlide(slideIndex)}
-                                    className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-200 ${
-                                        slideIndex === currentIndex
+                                    className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-200 ${slideIndex === currentIndex
                                             ? "bg-[#0081a7] shadow-md"
                                             : "bg-gray-300 hover:bg-gray-400"
-                                    }`}
+                                        }`}
                                     aria-label={`Ve a la página ${pageIndex + 1}`}
                                 />
                             );

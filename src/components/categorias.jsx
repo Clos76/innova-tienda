@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import dresses from "../assets/dresses.jpg";
 import jeans from "../assets/pants.jpg";
 import hoodies from "../assets/hoodies.jpg";
@@ -9,6 +9,8 @@ import gsuits from "../assets/girl-suits.jpg";
 import msuits from "../assets/mens-suits.jpg";
 
 export default function Categorias() {
+  const { designerId } = useParams()
+  
   return (
     <div className="container mx-auto p-4">
 
@@ -23,7 +25,7 @@ export default function Categorias() {
           <img src={dresses} alt="dresses" />
           <h2 className="text-lg font-semibold mb-2 text-black pt-4">Vestidos</h2>
           <div className="flex gap-4 justify-center">
-            <Link to="/productos/vestidos">
+            <Link to={`/designer/${designerId}/categories/vestidos`}>
               <button className="px-4 py-2 text-[#0081a7] border border-[#0081a7] hover:border-transparent hover:bg-[#00afb9] hover:text-white rounded">
                 Ver inventario
               </button>
@@ -36,7 +38,7 @@ export default function Categorias() {
           <img src={jeans} alt="jeans" />
           <h2 className="text-lg font-semibold mb-2 text-black pt-4">Jeans</h2>
           <div className="flex gap-4 justify-center">
-            <Link to="/productos/jeans">
+            <Link to={`/designer/${designerId}/categories/jeans`}>
               <button className="px-4 py-2 text-[#0081a7] border border-[#0081a7] hover:border-transparent hover:bg-[#00afb9] hover:text-white rounded">
                 Ver inventario
               </button>
@@ -49,7 +51,7 @@ export default function Categorias() {
           <img src={hoodies} alt="hoodies" />
           <h2 className="text-lg font-semibold mb-2 text-black pt-4">Hoodies</h2>
           <div className="flex gap-4 justify-center">
-           <Link to="/productos/hoodies" >
+           <Link to={`/designer/${designerId}/categories/hoodies`} >
             <button className="px-4 py-2 text-[#0081a7] border border-[#0081a7] hover:border-transparent hover:bg-[#00afb9] hover:text-white rounded">
               Ver inventario
             </button>
@@ -62,7 +64,7 @@ export default function Categorias() {
           <img src={shirts} alt="shirts" />
           <h2 className="text-lg font-semibold mb-2 text-black pt-4">Camisas</h2>
           <div className="flex gap-4 justify-center">
-            <Link to="/productos/camisas" >
+            <Link to={`/designer/${designerId}/categories/camisas`}>
             <button className="px-4 py-2 text-[#0081a7] border border-[#0081a7] hover:border-transparent hover:bg-[#00afb9] hover:text-white rounded">
               Ver inventario
             </button>
@@ -76,7 +78,7 @@ export default function Categorias() {
           <img src={shoes} alt="shoes" />
           <h2 className="text-lg font-semibold mb-2 text-black pt-4">Calzado</h2>
           <div className="flex gap-4 justify-center">
-           <Link to="/productos/calzado" >
+           <Link to={`/designer/${designerId}/categories/calzado`} >
             <button className="px-4 py-2 text-[#0081a7] border border-[#0081a7] hover:border-transparent hover:bg-[#00afb9] hover:text-white rounded">
               Ver inventario
             </button>
@@ -89,7 +91,7 @@ export default function Categorias() {
           <img src={purse} alt="purse" />
           <h2 className="text-lg font-semibold mb-2 text-black pt-4">Bolsas</h2>
           <div className="flex gap-4 justify-center">
-            <Link to="/productos/bolsas" >
+            <Link to={`/designer/${designerId}/categories/bolsas`} >
             <button className="px-4 py-2 text-[#0081a7] border border-[#0081a7] hover:border-transparent hover:bg-[#00afb9] hover:text-white rounded">
               Ver inventario
             </button>
@@ -102,7 +104,7 @@ export default function Categorias() {
           <img src={gsuits} alt="girls suits" />
           <h2 className="text-lg font-semibold mb-2 text-black pt-4">Profesional</h2>
           <div className="flex gap-4 justify-center">
-           <Link to="/productos/dama-profesional" >
+           <Link to={`/designer/${designerId}/categories/profesional`} >
             <button className="px-4 py-2 text-[#0081a7] border border-[#0081a7] hover:border-transparent hover:bg-[#00afb9] hover:text-white rounded">
               Ver inventario
             </button>
@@ -115,12 +117,22 @@ export default function Categorias() {
           <img src={msuits} alt="mens suits" />
           <h2 className="text-lg font-semibold mb-2 text-black pt-4">Trajes</h2>
           <div className="flex gap-4 justify-center">
-            <Link to="/productos/trajes" >
+            <Link to={`/designer/${designerId}/categories/trajes`} >
             <button className="px-4 py-2 text-[#0081a7] border border-[#0081a7] hover:border-transparent hover:bg-[#00afb9] hover:text-white rounded">
               Ver inventario
             </button>
             </Link>
           </div>
+        </div>
+
+         {/**return home container */}
+        <div className="mb-6">
+            <Link
+                to="/innova-shop"
+                className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:gb-blue-700">
+                ← Volver a Diseñadores
+            </Link>
+
         </div>
 
       </div>

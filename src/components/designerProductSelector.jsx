@@ -5,6 +5,8 @@ import { User, Package } from "lucide-react";
 import DesignerProductManager from "../components/ProductoIngresoDesigner";
 import AddDesigner from "../pages/addDesigner";
 
+//page to add designer and products
+
 function DesignerProductSelector() {
   const [designers, setDesigners] = useState([]);
   const [selectedDesigner, setSelectedDesigner] = useState(null);

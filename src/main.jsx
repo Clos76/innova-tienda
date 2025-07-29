@@ -5,6 +5,7 @@ import './index.css';
 import App from './App.jsx';
 import { CartProvider } from './context/cartContext.jsx';
 import { Toaster } from 'react-hot-toast';
+import DesignerProductSelector from './components/designerProductSelector.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -12,5 +13,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <CartProvider>
       <App />
     </CartProvider>
+  
+
   </React.StrictMode>
 );

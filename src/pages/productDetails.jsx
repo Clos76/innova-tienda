@@ -21,6 +21,8 @@ function ProductDetail() {
     const [mainImage, setMainImage] = useState(null); // <-- nuevo estado
     const [selectedSize, setSelectedSize] = useState("");
     const { dispatch } = useCart(); //define dispatch as func useCart()
+    const [designerId, setDesignerId] = useState(null); //designer ID
+    const [designerName, setDesignerName] = useState("") //name designer
 
 
 
@@ -84,6 +86,19 @@ function ProductDetail() {
                 const data = docSnap.data();
                 setProducto(data);
                 setMainImage(data.imagenes?.[0]); // <-- establecer imagen principal
+                setDesignerId(data.designerId); 
+
+                //get name of designer
+                if(data.designerId){
+                    const designerRef= doc(db, "designers", data.designerId);
+                    const designerSnap = await getDoc(designerRef);
+                    if(designerSnap.exists() ){
+                        const designerData = designerSnap.data();
+                        setDesignerName(designerData.name || "Nombre no disponible");
+                    }else {
+                        setDesignerName("Nombre no disponible");
+                    }
+                }
             }
         };
         fetchProduct();
@@ -108,7 +123,7 @@ function ProductDetail() {
             {/* return home container */}
             <div className="mb-6">
                 <Link
-                    to="/"
+                    to="/innova-shop"
                     className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                 >
                     ← Volver a Productos
@@ -153,7 +168,7 @@ function ProductDetail() {
                 <div className="">
                     <h1 className="text-3xl font-bold text-gray-600 mb-2 ">{producto.nombre}</h1>
                     <p className="text-lg text-gray-700 mb-2">
-                        Diseñador: {producto.diseñador}
+                        Diseñador: {producto.designerName}
                     </p>
                     <p className="text-xl font-semibold text-black mb-4 space-y-1">
                         Total: ${producto.precio.toFixed(2)} MXN <br />
@@ -268,8 +283,10 @@ function ProductDetail() {
             </div>
 
             <div>
-                <RelatedByDesigner currentProductId={id}
-                    diseñador={producto.diseñador} />
+                <RelatedByDesigner 
+                currentProductId={id}
+                designerName={designerName}
+                 />
             </div>
 
             <div>

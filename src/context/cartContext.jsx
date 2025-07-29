@@ -23,8 +23,8 @@ function cartReducer(state, action) {
   // Remove the default parameter - this was causing issues
   const items = state.items || [];
   
-  console.log("Cart Reducer Action:", action.type, action.payload); // Debug log
-  console.log("Current State:", state); // Debug log
+  // console.log("Cart Reducer Action:", action.type, action.payload); // Debug log
+  // console.log("Current State:", state); // Debug log
   
   switch (action.type) {
     case "ADD_ITEM":
@@ -41,12 +41,12 @@ function cartReducer(state, action) {
         };
         
         const newState = { ...state, items: updatedItems };
-        console.log("Updated existing item, new state:", newState); // Debug log
+        // console.log("Updated existing item, new state:", newState); // Debug log
         return newState;
       } else {
         // New item, add to cart
         const newState = { ...state, items: [...items, action.payload] };
-        console.log("Added new item, new state:", newState); // Debug log
+        // console.log("Added new item, new state:", newState); // Debug log
         return newState;
       }
 
@@ -68,7 +68,7 @@ function cartReducer(state, action) {
       return { ...state, items: [] };
 
     default:
-      console.log("Unknown action type:", action.type); // Debug log
+      // console.log("Unknown action type:", action.type); // Debug log
       return state;
   }
 }
@@ -80,7 +80,7 @@ export function CartProvider({ children }) {
 
   // Add debugging to see when state changes
   useEffect(() => {
-    console.log("Cart state changed:", state); // Debug log
+    // console.log("Cart state changed:", state); // Debug log
     localStorage.setItem("cart", JSON.stringify(state));
   }, [state]);
 

@@ -37,8 +37,8 @@ export default function VideoSection({ title, videoUrl }) {
                         src={autoplayUrl}
                         frameBorder="0"
                         title={title || "Video"}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                        allowFullScreen
+                        allow=" accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                        
                     ></iframe>
                 </div>
             </div>

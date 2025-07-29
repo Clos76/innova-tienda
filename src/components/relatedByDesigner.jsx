@@ -4,16 +4,17 @@ import { db } from "../firebase";
 import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-function RelatedByDesigner({ currentProductId, diseñador }) {
+function RelatedByDesigner({ currentProductId, designerName }) {
   const [productosRelacionados, setProductosRelacionados] = useState([]);
   const scrollRef = useRef(null);
 
   useEffect(() => {
     const fetchProductos = async () => {
-      if (!diseñador) return;
+      if (!designerName) return;
+      // console.log("Buscando relacionados para:", designerName); //debug
       const q = query(
         collection(db, "productos"),
-        where("diseñador", "==", diseñador)
+        where("designerName", "==", designerName)
       );
       const querySnapshot = await getDocs(q);
       const productos = [];
@@ -22,11 +23,12 @@ function RelatedByDesigner({ currentProductId, diseñador }) {
           productos.push({ id: doc.id, ...doc.data() });
         }
       });
+      // console.log("Productos relacionados encontrados:", productos) //debug
       setProductosRelacionados(productos);
     };
 
     fetchProductos();
-  }, [diseñador, currentProductId]);
+  }, [designerName, currentProductId]);
 
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -44,7 +46,9 @@ function RelatedByDesigner({ currentProductId, diseñador }) {
 
   return (
     <div className="mt-10 relative">
-      <h2 className="text-2xl font-semibold mb-4">Más de {diseñador}</h2>
+      <h2 className="text-2xl font-semibold mb-4">Más de {designerName}</h2>
+            
+
       <div className="relative">
         {/* Left Button */}
         <button

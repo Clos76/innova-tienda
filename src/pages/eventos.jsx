@@ -11,7 +11,7 @@ export default function Eventos() {
         <PageLayout>
 
 
-            <DesignerProductSelector/>
+           
 
        
 

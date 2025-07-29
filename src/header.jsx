@@ -29,7 +29,14 @@ export default function HeaderTabs() {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const handleMenuClick = (event) => setAnchorEl(event.currentTarget);
+
+
+  const handleMenuClick = (event) => {
+   if(event.currentTarget){
+    setAnchorEl(event.currentTarget);
+   }
+  }
+
   const handleMenuClose = () => setAnchorEl(null);
 
   const handleChange = (event, newValue) => {
@@ -71,7 +78,11 @@ export default function HeaderTabs() {
           <IconButton edge="end" color="inherit" aria-label="menu" onClick={handleMenuClick}>
             <MenuIcon />
           </IconButton>
-          <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
+          <Menu 
+          anchorEl={anchorEl} 
+          open={Boolean(anchorEl)} 
+          onClose={handleMenuClose}
+          >
             {labels.map((label, index) => (
               <MenuItem key={label} onClick={(e) => handleChange(e, index)}>
                 {label}

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { db, storage } from "../firebase"; // Ajusta si es necesario
-
+import { db, storage } from "../firebase"; 
 function AddDesigner() {
   const [formData, setFormData] = useState({
     name: "",

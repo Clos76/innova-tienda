@@ -4,6 +4,10 @@ import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage
 import { db, storage } from "../firebase";
 import { Plus, Edit2, Trash2, Save, X, Image as ImageIcon, Upload } from "lucide-react";
 
+//Pagina de Gestion de Productos, una vez seleccionado al diseñador, va a esta pagina, de aqui 
+//el admin puede ver los productos registrados del diseñador, CRUD, 
+
+
 function DesignerProductManager({ designerId, designerName }) {
   const [formData, setFormData] = useState({
     categoria: "",
