@@ -1,17 +1,18 @@
 import PageLayout from "../components/pageLayout" //page layout css for all pages
-import ImageTextSection from "../components/flexboxImageText";
-import dresses from "../assets/dresses.jpg"
-import ImageTextOnRight from "../components/textOnRight";
-import FavoriteGallery from "../components/favoriteGallary";
+// import ImageTextSection from "../components/flexboxImageText";
+// import dresses from "../assets/dresses.jpg"
+// import ImageTextOnRight from "../components/textOnRight";
+// import FavoriteGallery from "../components/favoriteGallary";
 import BannerCarousel from "../components/carrousel"
-import VideoSection from "../components/videoSection";
-import TeamPage from "../components/contributorCard";
+// import VideoSection from "../components/videoSection";
+// import TeamPage from "../components/contributorCard";
 import Signup from "../components/signup";
 import Footer from "../components/footer.jsx";
 import red from "../assets/red.png"
 import { Link } from 'react-router-dom';
 import Categorias from "../components/categorias.jsx";
 import DesignersCarousel from "./disenadores.jsx";
+import BestSeller from "../components/bestSeller.jsx";
 
 //carousel imgs
 import bannerImage from "../assets/bannerInnovaModa.jpg";
@@ -68,7 +69,7 @@ export default function Innovamoda() {
 
         
 
-            <FavoriteGallery images={favoriteImages}/>
+            <BestSeller/>
 
        
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where, serverTimestamp } from "firebase/firestore";
+import { ref,uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { db, storage } from "../firebase";
 import { Plus, Edit2, Trash2, Save, X, Image as ImageIcon, Upload } from "lucide-react";
 
@@ -18,7 +18,8 @@ function DesignerProductManager({ designerId, designerName }) {
     descripcionExtendida: "",
     materiales: "",
     guiaDeCuidados: "",
-    tallas: []
+    tallas: [],
+    published: false //controlled in ui
   });
   const [files, setFiles] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -28,7 +29,7 @@ function DesignerProductManager({ designerId, designerName }) {
   const [showForm, setShowForm] = useState(false);
 
   const categories = [
-    "vestidos", "jeans", "hoodies", "camisas", "calzado", 
+    "vestidos", "jeans", "hoodies", "camisas", "calzado",
     "bolsas", "dama-profesional", "trajes"
   ];
 
@@ -41,7 +42,7 @@ function DesignerProductManager({ designerId, designerName }) {
     try {
       setIsLoading(true);
       const q = query(
-        collection(db, "productos"), 
+        collection(db, "productos"),
         where("designerId", "==", designerId)
       );
       const snapshot = await getDocs(q);
@@ -76,7 +77,8 @@ function DesignerProductManager({ designerId, designerName }) {
       descripcionExtendida: "",
       materiales: "",
       guiaDeCuidados: "",
-      tallas: []
+      tallas: [],
+      published: false //ranking
     });
     setFiles([]);
     setEditingProduct(null);
@@ -113,25 +115,66 @@ function DesignerProductManager({ designerId, designerName }) {
         imagenes = [...imagenes, ...newImages];
       }
 
-      const productData = {
-        ...formData,
-        precio: parseFloat(formData.precio),
-        imagenes,
-        designerId,
-        designerName,
-        updatedAt: new Date(),
-      };
+      // const productData = {
+      //   ...formData,
+      //   precio: parseFloat(formData.precio),
+      //   imagenes,
+      //   designerId,
+      //   designerName,
+      //   updatedAt: new Date(),
+      // };
+
+      //normalize price 
+      const parsedPrice = Number(formData.precio);
+      const precio = isNaN(parsedPrice) ? 0 : parsedPrice;
+
 
       if (editingProduct) {
-        // Update existing product
+// Update existing product
+        const productData = {
+          categoria: formData.categoria, 
+          nombre: formData.nombre, 
+          descripcion: formData.descripcion, 
+          precio, 
+          composicion: formData.composicion, 
+          descripcionExtendida: formData.descripcionExtendida, 
+          materiales: formData.materiales, 
+          guiaDeCuidados: formData.guiaDeCuidados,
+          tallas: formData.tallas, 
+          imagenes, 
+          designerId, 
+          designerName, 
+          published: !!formData.published, 
+          updatedAt: serverTimestamp(),
+        }
+        
         await updateDoc(doc(db, "productos", editingProduct.id), productData);
         alert("Producto actualizado exitosamente!");
       } else {
-        // Create new product
-        await addDoc(collection(db, "productos"), {
-          ...productData,
-          creadoEn: new Date(),
-        });
+        // Create new product Initialize counters --for ranking
+        const productData = {
+          categoria: formData.categoria, 
+          nombre: formData.nombre, 
+          descripcion: formData.descripcion,
+          precio, 
+          composicion: formData.composicion,
+          descripcionExtendida: formData.descripcionExtendida, 
+          materiales: formData.materiales,
+          guiaDeCuidados: formData.guiaDeCuidados,
+          tallas: formData.tallas, 
+          imagenes, 
+          designerId,
+          designerName, 
+          published: !!formData.published,
+          totalSold: 0,  //initialize counter ranking
+          soldBySize: {}, //optional per-size map
+          createdAt: serverTimestamp(), 
+          updatedAt: serverTimestamp(),
+
+        };
+
+
+        await addDoc(collection(db, "productos"),productData);
         alert("Producto agregado exitosamente!");
       }
 
@@ -155,7 +198,8 @@ function DesignerProductManager({ designerId, designerName }) {
       descripcionExtendida: product.descripcionExtendida || "",
       materiales: product.materiales || "",
       guiaDeCuidados: product.guiaDeCuidados || "",
-      tallas: product.tallas || []
+      tallas: product.tallas || [],
+      published: !!product.published,
     });
     setEditingProduct(product);
     setShowForm(true);
@@ -172,6 +216,7 @@ function DesignerProductManager({ designerId, designerName }) {
         const deletePromises = product.imagenes.map(async (imageUrl) => {
           try {
             const imageRef = ref(storage, imageUrl);
+           
             await deleteObject(imageRef);
           } catch (error) {
             console.warn("Could not delete image:", error);
@@ -372,10 +417,28 @@ function DesignerProductManager({ designerId, designerName }) {
               </div>
             </div>
 
+
+                {/** Visibility of item */}
+            <div className="md:col-span-2">
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={formData.published}
+                  onChange={(e) => 
+                    setFormData((prev) => ({...prev, published:e.target.checked}))
+                  }
+                />
+                <span className="text-sm">Publicar este producto</span>
+              </label>
+              <p className="text-xs">
+                {formData.published? "Publicado": "Borrador"}
+              </p>
+            </div>
+
             {/* Images */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium mb-2">Imágenes</label>
-              
+
               {/* Existing images (when editing) */}
               {editingProduct && editingProduct.imagenes && (
                 <div className="mb-4">
@@ -450,7 +513,7 @@ function DesignerProductManager({ designerId, designerName }) {
         <div className="p-4 border-b">
           <h3 className="text-lg font-semibold">Productos Registrados</h3>
         </div>
-        
+
         {products.length === 0 ? (
           <div className="p-8 text-center text-gray-500">
             <ImageIcon className="w-12 h-12 mx-auto mb-4 opacity-50" />
