@@ -20,6 +20,8 @@ const { getFirestore } = require("firebase-admin/firestore");
 // Initialize Firebase Admin SDK (only once)
 initializeApp();
 
+//best seller section
+const admin = require("firebase-admin");
 
 
 
@@ -35,6 +37,50 @@ const cors = require("cors")({
   ],
 });
 
+
+  //best seller section
+
+  exports.updateProductSales = onDocumentCreated(
+    "ordenes/{ordenId}",
+    async (event) => {
+      const db = getFirestore();
+      const order = event.data?.data();
+      if (!order || !order.productos || !Array.isArray(order.productos)) return;
+
+      const batch = db.batch();
+
+      order.productos.forEach((item) => {
+        const prodRef = db.collection("productos").doc(item.id);
+        const qty = Number(item.cantidad || 1);
+        const talla = item.talla || null;
+
+        // Increment totalSold
+        batch.set(
+          prodRef,
+          {
+            totalSold: admin.firestore.FieldValue.increment(qty),
+          },
+          { merge: true }
+        );
+
+        // Increment by size if available
+        if (talla) {
+          batch.set(
+            prodRef,
+            {
+              soldBySize: {
+                [talla]: admin.firestore.FieldValue.increment(qty),
+              },
+            },
+            { merge: true }
+          );
+        }
+      });
+
+      await batch.commit();
+      console.log("✅ Productos actualizados con ventas");
+    }
+  );
 
 // Callable Function (para apps móviles o Firebase SDKs)
 exports.createCheckoutSession = onCall({ secrets: [stripeSecret] }, async (request) => {
@@ -317,7 +363,7 @@ exports.stripeWebhook = onRequest(
         }
       }
 
-      //save data to firestore --address
+      //save data to firestore --address/ info/ details
       const db = getFirestore();
       await db.collection("ordenes").add({
         sessionId: session.id,
@@ -327,7 +373,7 @@ exports.stripeWebhook = onRequest(
         montoTotal: session.amount_total / 100,
         productos: detailedCartItems, //add rest of detailed cart items, metadata
         creado: new Date(),
-        
+
       }).catch(err => {
         console.error("Error al guardar la orden en Firestore:", err);
       });
