@@ -1,33 +1,16 @@
-import PageLayout from "../components/pageLayout" //page layout css for all pages
 import Footer from "../components/footer"
 import VideoSection from "../components/videoSection"
-import DesignerProfile from "./perfilDisenador"
-import CategoriasDesigner from "../components/categoriasDesigner"
-import DesignerProductManager from "../components/ProductoIngresoDesigner"
-import DesignerProductSelector from "../components/designerProductSelector"
+import EventsPage from "../components/eventos/eventosMain"
+import Signup from "../components/signup"
 
 export default function Eventos() {
     return (
-        <PageLayout>
+        <>
+            <EventsPage/>
 
-
-           
-
-       
-
-
-           
-
-
-
-            <h1 className="text-2xl font-semibold mb-4">Nuestros Eventos</h1>
-            <p>Conoce nuestros eventos...</p> 
-            
-            
-           
-
+              <Signup />
         <Footer />
-        </PageLayout>
+       </>
     )
 }
 

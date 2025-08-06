@@ -20,7 +20,7 @@ export default function HeaderTabs() {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const paths = ['/', '/innova-shop', '/eventos', '/revista'];//, '/colecciones', '/disenadores', '/patrocinadores'
-  const labels = ['Inicio', 'Innova Shop', 'Eventos', 'Revista Digital']; //'Colecciones', 'Diseñadores', 'Patrocinadores',
+  const labels = ['Inicio', 'Tienda', 'Eventos', 'Revista']; //'Colecciones', 'Diseñadores', 'Patrocinadores',
 
   const currentTab = paths.indexOf(location.pathname) === -1 ? 0 : paths.indexOf(location.pathname);
   const [value, setValue] = useState(currentTab);
@@ -72,7 +72,7 @@ export default function HeaderTabs() {
   return (
 
     //visual in mobile
-    <div className="w-screen bg-white shadow-md ">
+    <div className="w-screen bg-whites shadow-md ">
       {isMobile ? (
         <div className="flex justify-between items-center px-4 py-2 w-full">
           <IconButton edge="end" color="inherit" aria-label="menu" onClick={handleMenuClick}>

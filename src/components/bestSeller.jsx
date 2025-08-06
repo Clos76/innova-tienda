@@ -97,7 +97,7 @@ export default function BestSeller({
 
   if (loading) {
     return (
-      <div className={`w-full bg-black py-12 px-4 ${className}`}>
+      <div className={`w-full bg-[#231C1C] py-12 px-4 ${className}`}>
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-8">
             {title}
@@ -121,7 +121,7 @@ export default function BestSeller({
 
   if (error) {
     return (
-      <div className={`w-full bg-black py-12 px-4 ${className}`}>
+      <div className={`w-full bg-[#231C1C] py-12 px-4 ${className}`}>
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{title}</h2>
           <p className="text-red-400 mb-4">{error}</p>
@@ -137,7 +137,7 @@ export default function BestSeller({
   }
 
   return (
-    <div className={`w-full bg-black py-12 px-4 ${className}`}>
+    <div className={`w-full bg-[#231C1C] py-12 px-4 ${className}`}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">{title}</h2>
@@ -161,11 +161,11 @@ export default function BestSeller({
         />
       )}
 
-        <div className="text-center mt-8">
+        {/* <div className="text-center mt-8">
           <button className="bg-white text-black px-8 py-3 rounded-md hover:bg-gray-100 transition-colors duration-200 font-medium">
             Ver Todos Los Productos
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

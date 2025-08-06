@@ -6,7 +6,7 @@ export default function Revista() {
 
     return (
 
-        <div>
+        <div className="bg-black">
             <h1 className="text-2xl font-semibold mb-4">Nuestra Revista</h1>
             <p>Conoce a nuestra Revista Online...</p>
             

@@ -15,12 +15,13 @@ import Modelos from "../assets/InicioModels.png"
 import BannerCarousel from "../components/carrousel"
 import talleres from "../assets/InicioTalleres.png"
 import Signup from "../components/signup"
+import ImageSection from "../components/ImageSection"
 
 const images = [
-    {src: talleres, alt: "Banner principal"},
-    {src:reporte, alt: "reporte"}, 
-    {src: Medios, alt: "Medios"},
-    {src: Modelos, alt: "Marcas"}
+    { src: talleres, alt: "Banner principal" },
+    { src: reporte, alt: "reporte" },
+    { src: Medios, alt: "Medios" },
+    { src: Modelos, alt: "Marcas" }
 ]
 
 export default function Inicio() {
@@ -28,7 +29,7 @@ export default function Inicio() {
     return (
 
         <div>
-        
+
             {/**Banner Carousel using Swiper */}
             <div className="w-screen overflow-hidden"> {/* Optional: to stretch the carousel to screen edges */}
 
@@ -76,26 +77,19 @@ oportunidades para los jóvenes creativos de la industria"
                 text2="Espacio que reúne a los diseñadores ganadores de nuestro concurso y a diseñadores internacionales en una misma pasarela, complementado con conferencias magistrales donde expertos de la industria de la moda abordan distintas temáticas conforme a las tendencias del momento"
             />
 
+           
+           <ImageSection/>
 
 
-
-
-
-             <Signup />
-
-
+            <Signup />
 
 
 
             <Footer />
 
+            
+
         </div>
-
-
-
-
-
-
 
     )
 }

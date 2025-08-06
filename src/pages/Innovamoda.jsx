@@ -1,4 +1,4 @@
-import PageLayout from "../components/pageLayout" //page layout css for all pages
+// import PageLayout from "../components/pageLayout" //page layout css for all pages
 // import ImageTextSection from "../components/flexboxImageText";
 // import dresses from "../assets/dresses.jpg"
 // import ImageTextOnRight from "../components/textOnRight";
@@ -25,6 +25,7 @@ import girl from "../assets/girlShowBanner.jpg"
 import feb from "../assets/feb.png";
 import april from "../assets/april.png";
 import march from "../assets/march.png";
+import TopCollection from "../components/coleccionTop.jsx";
 
 const favoriteImages =[
     {src: feb, alt:"Frebrero"},
@@ -46,44 +47,22 @@ export default function Innovamoda() {
     return (
 
 
-        <PageLayout>
-
+       <>
 
             {/**Image Container */}
-
-
             {/**Banner Carousel using Swiper */}
             <div className="w-screen overflow-hidden"> {/* Optional: to stretch the carousel to screen edges */}
-            
-
                 <BannerCarousel images={images} />
             </div>
 
-
-
-
             <DesignersCarousel/>
 
-            
-
-
-        
-
             <BestSeller/>
-
        
-
-
-             
-           
-
-            <Signup />
-
+            <TopCollection/>
+ 
             <Footer />
-
-
-        </PageLayout>
-
+ </>
     )
 
 }

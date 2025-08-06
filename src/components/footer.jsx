@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function Footer() {
     return (
-        <footer className="w-full bg-[#023047] text-white text-center py-8 mt-16">
+        <footer className="w-full bg-[#231C1C] text-white text-center py-8 border-t-4 border-[#3B538F] ">
             <div className="max-w-4xl mx-auto px-4 flex flex-col items-center gap-6">
 
                 {/* Navigation links */}

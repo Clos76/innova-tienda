@@ -128,11 +128,11 @@ export default function DesignersCarousel({ onDesignerClick }) {
     };
 
     return (
-        <div className="container mx-auto p-2 sm:p-4 max-w-7xl">
+        <div className="w-full mx-auto bg-[#231C1C] p-2 sm:p-4">
             {/** Header */}
             <div className="text-center pt-2 sm:pt-3 mb-6 sm:mb-8">
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 text-[#023047]">DISEÑADORES GANADORES</h1>
-                <p className="text-sm sm:text-base text-gray-600">Descubre nuestros talentosos diseñadores</p>
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 text-[#023047] text-white">DISEÑADORES GANADORES</h1>
+                <p className="text-sm sm:text-base text-white">Descubre nuestros talentosos diseñadores</p>
             </div>
 
             {/** Carousel container */}
@@ -166,7 +166,7 @@ export default function DesignersCarousel({ onDesignerClick }) {
                                 >
                                     {/** Image */}
                                     <div className="mb-4 sm:mb-6">
-                                        <div className="relative mx-auto w-24 h-24 sm:w-32 sm:h-32 lg:w-36 lg:h-36 rounded-full overflow-hidden bg-gray-100 shadow-inner">
+                                        <div className="relative mx-auto w-24 h-24 sm:w-32 sm:h-32 lg:w-46 lg:h-46 rounded-full overflow-hidden bg-gray-100 shadow-inner">
                                             <img
                                                 src={designer.imageUrls?.[0]}
                                                 alt={designer.name}
@@ -218,7 +218,7 @@ export default function DesignersCarousel({ onDesignerClick }) {
                             className="absolute right-1 sm:right-4 z-10 p-2 sm:p-3 rounded-full bg-white shadow-lg hover:bg-gray-50 hover:shadow-xl transition-all duration-200 border border-gray-200"
                             aria-label="Próximos diseñadores"
                         >
-                            <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6 text-[#0081a7]" />
+                            <ChevronRight className=" pr-10px w-4 h-4 sm:w-6 sm:h-6 text-[#0081a7]" />
                         </button>
                     )}
                 </div>

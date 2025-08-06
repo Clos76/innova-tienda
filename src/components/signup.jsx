@@ -52,8 +52,8 @@ export default function Signup() {
   };
 
   return (
-    <section className="w-full min-h-screen bg-black flex items-center justify-center py-4">
-      <div className="w-full max-w-4xl bg-white p-10 sm:p-14 rounded shadow-md flex flex-col justify-center h-full">
+    <section className="w-full py-16 bg-[#231C1C] flex items-center justify-center">
+      <div className="w-full max-w-6xl bg-white p-10 sm:p-14 rounded shadow-md flex flex-col justify-center h-full">
         <h1 className="text-2xl font-bold text-center mb-4 text-blue-900">
           ¿Te gustaría apoyar el proyecto?
         </h1>
