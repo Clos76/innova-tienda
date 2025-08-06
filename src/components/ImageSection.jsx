@@ -1,4 +1,7 @@
 import React from 'react';
+ import assistentes from "../assets/eventos/assistentes.png"
+import stats from "../assets/eventos/stats.png" 
+import nov from "../assets/eventos/Nov.png" 
 
 const ResponsiveImage = ({ 
   src, 
@@ -27,20 +30,20 @@ const ImageSection = () => {
       <div className="max-w-6xl mx-auto space-y-5">
 
        <ResponsiveImage 
-          src="src/assets/eventos/Assistentes.png" 
+          src={assistentes} 
           alt="Impact Statistics Dashboard"
           maxWidth="max-w-7xl" // Custom max width
         />
 
         <ResponsiveImage 
-          src="src/assets/eventos/stats.png" 
+          src={stats}
           alt="Impact Statistics Dashboard"
           maxWidth="max-w-7xl" // Custom max width
         />
 
         {/* Different max width example */}
         <ResponsiveImage 
-          src="src/assets/eventos/Nov.png" 
+          src={nov}
           alt="Volunteer Activities"
           maxWidth="max-w-7xl" // Smaller max width
         />

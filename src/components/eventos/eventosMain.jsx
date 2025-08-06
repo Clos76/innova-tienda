@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, Clock, Users, ExternalLink } from 'lucide-react';
+import agosto from "../../assets/eventos/agostoConcurso.png"
+import sep from "../../assets/eventos/eventosSep.png"
+import oct from "../../assets/eventos/eventosOct.png"
+import nov from "../../assets/eventos/Nov.png"
+import NewYear from "../../assets/eventos/2026.png"
 
 // Sample datos
 const sampleEvents = [
@@ -10,7 +15,7 @@ const sampleEvents = [
         date: "17/8/2025",
         time: "9:00 AM - 3:00 PM",
         location: "Carretera Tijuana-Ensenada Km. 29.5, Castillos del Mar, 22711 Playas de Rosarito, B.C.",
-        image: "src/assets/eventos/agostoConcurso.png",
+        image: agosto,
         category: "Concursos",
         attendees: 45,
         maxAttendees: 100,
@@ -23,7 +28,7 @@ const sampleEvents = [
         date: "25/9/2025",
         time: "9:00 AM - 3:00 PM",
         location: "Carretera Tijuana-Ensenada Km. 29.5, Castillos del Mar, 22711 Playas de Rosarito, B.C.",
-        image: "src/assets/eventos/eventosSep.png",
+        image: sep,
         category: "Conferencia",
         attendees: 65,
         maxAttendees: 100,
@@ -36,7 +41,7 @@ const sampleEvents = [
         date: "7/10/2025",
         time: "9:00 AM - 3:00 PM",
         location: "Carretera Tijuana-Ensenada Km. 29.5, Castillos del Mar, 22711 Playas de Rosarito, B.C.",
-        image: "src/assets/eventos/eventosOct.png",
+        image: oct,
         category: "Concursos",
         attendees: 45,
         maxAttendees: 100,
@@ -49,7 +54,7 @@ const sampleEvents = [
         date: "25/11/2025",
         time: "9:00 AM - 3:00 PM",
         location: "Carretera Tijuana-Ensenada Km. 29.5, Castillos del Mar, 22711 Playas de Rosarito, B.C.",
-        image: "src/assets/eventos/Nov.png",
+        image:nov,
         category: "Conferencia",
         attendees: 45,
         maxAttendees: 100,
@@ -62,7 +67,7 @@ const sampleEvents = [
         date: "25/2/2026",
         time: "9:00 AM - 3:00 PM",
         location: "Carretera Tijuana-Ensenada Km. 29.5, Castillos del Mar, 22711 Playas de Rosarito, B.C.",
-        image: "src/assets/eventos/2026.png",
+        image:NewYear,
         category: "Educacion",
         attendees: 67,
         maxAttendees: 100,
