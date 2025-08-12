@@ -16,13 +16,26 @@ import BannerCarousel from "../components/carrousel"
 import talleres from "../assets/InicioTalleres.png"
 import Signup from "../components/signup"
 import ImageSection from "../components/ImageSection"
+import assistentes from "../assets/eventos/assistentes.png"
+import stats from "../assets/eventos/stats.png"
+import nov from "../assets/eventos/Nov.png"
 
+//images for carousel
 const images = [
     { src: talleres, alt: "Banner principal" },
     { src: reporte, alt: "reporte" },
     { src: Medios, alt: "Medios" },
     { src: Modelos, alt: "Marcas" }
 ]
+
+  //array of all images for ImageSection at bottom
+  const images3 = [
+    { src: assistentes, alt: "Assistentes - Participantes de Evento" },
+    { src: stats, alt: "Statisticas de Alcanse" },
+    { src: nov, alt: "Alcanse Mundial" }
+
+  ];
+
 
 export default function Inicio() {
 
@@ -78,7 +91,7 @@ oportunidades para los jóvenes creativos de la industria"
             />
 
            
-           <ImageSection/>
+           <ImageSection images={images3}/>
 
 
             <Signup />

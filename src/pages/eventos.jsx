@@ -6,14 +6,14 @@ import Signup from "../components/signup"
 export default function Eventos() {
     return (
         <>
-            <EventsPage/>
+            <EventsPage />
 
-              <Signup />
-        <Footer />
-       </>
+            <Signup />
+            <Footer />
+        </>
     )
 }
 
- <VideoSection
-               videoUrl="https://www.youtube.com/embed/BAbGLXPUWsM"
-            />
+<VideoSection
+    videoUrl="https://www.youtube.com/embed/BAbGLXPUWsM"
+/>
