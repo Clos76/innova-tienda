@@ -28,6 +28,10 @@ import Envios from './pages/envios';
 import DesignerProfile from './pages/perfilDisenador';
 import Categorias from './components/categorias';
 
+//magazine
+import MagazineSection from './components/revista/MagazineColumns';
+import MagazineFlip from './components/revista/MagazineReader';
+
 
 
 function App() {
@@ -48,10 +52,11 @@ function App() {
         
         <Route path="/productos/:categoria" element={<ProductList/>}  />
         <Route path="/upload-temp" element={< BulkUploader />} />
+          <Route path="/revista" element={<Revista />} />
         */}
 
         <Route path="/eventos" element={<Eventos />} />
-        <Route path="/revista" element={<Revista />} />
+      
 
 
         <Route path="/admin/add-product" element={<ProtectedRoute> <AddProductWithImages /> </ProtectedRoute>} />
@@ -68,11 +73,12 @@ function App() {
 
         {/** Desinger Routes */}
         <Route path="/designer/:designerId/categories" element={<Categorias />} />
-       
         <Route path="/designer/:designerId/categories/:categoria" element={<ProductList />} />
-
         <Route path="/producto/:id" element={<ProductDetail />} />
 
+        {/** Magazine Routing */}
+          <Route path="/revista" element={<MagazineSection/>}/>
+          <Route path='/revista/:slug'  element={<MagazineFlip/>}/>
 
 
 

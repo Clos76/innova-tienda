@@ -41,3 +41,20 @@ body {
 .animate-leave {
   animation: leave 0.3s ease-in forwards
 }
+
+/* flipbook.css */
+.html-flip-book .page {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.html-flip-book .page > div {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.html-flip-book .page img {
+  display: block;
+  margin: 0 !important;
+  padding: 0 !important;
+}
