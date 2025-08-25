@@ -31,6 +31,7 @@ import Categorias from './components/categorias';
 //magazine
 import MagazineSection from './components/revista/MagazineColumns';
 import MagazineFlip from './components/revista/MagazineReader';
+import MagazineSwiper from './components/revista/MagazineSwiper';
 
 
 
@@ -78,7 +79,7 @@ function App() {
 
         {/** Magazine Routing */}
           <Route path="/revista" element={<MagazineSection/>}/>
-          <Route path='/revista/:slug'  element={<MagazineFlip/>}/>
+          <Route path='/revista/:slug'  element={<MagazineSwiper/>}/>
 
 
 
