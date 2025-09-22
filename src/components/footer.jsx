@@ -10,12 +10,11 @@ export default function Footer() {
                 {/* Navigation links */}
                 <div className="flex flex-wrap justify-center gap-4 text-xl font-medium">
                     <Link to="/" className="hover:text-blue-400">Inicio</Link>
-                    <Link to="/" className="hover:text-blue-400">Innova-Shop</Link>
+                    <Link to="/innova-shop" className="hover:text-blue-400">Tienda</Link>
 
-                    {/* <Link to="/disenadores" className="hover:text-blue-400">Diseñadores</Link>
-                    <Link to="/patrocinadores" className="hover:text-blue-400">Patrocinadores</Link> */}
-                    <a href="https://innovamoda.org/encuentro/" className="hover:text-blue-400">Eventos</a>
-                    <a href="https://innovamoda.org/3d-flip-book/mayo-2025/" className="hover:text-blue-400">Revista Digital</a>
+                    <Link to="/eventos" className="hover:text-blue-400">Eventos</Link>
+                    <Link to="/revista" className="hover:text-blue-400">Revista Digital</Link> 
+                  
 
                 </div>
 

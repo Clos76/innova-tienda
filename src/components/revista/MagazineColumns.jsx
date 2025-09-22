@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Calendar, Eye, Download } from 'lucide-react';
+import Footer from '../footer';
 
 const MagazineSection = () => {
     const navigate = useNavigate();
@@ -22,7 +23,6 @@ const MagazineSection = () => {
         "noviembre-2023": import.meta.glob("/src/assets/revista/noviembre-2023/*.jpg", { eager: true }),
         "enero-2024": import.meta.glob("/src/assets/revista/enero-2024/*.jpg", { eager: true }),
         "abril-2024": import.meta.glob("/src/assets/revista/abril-2024/*.jpg", { eager: true }),
-
     };
 
     // Load magazine covers
@@ -144,9 +144,7 @@ const MagazineSection = () => {
             image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop",
             downloadUrl: "#",
             embedUrl: "https://innovamoda.org/3d-flip-book/marzo-2024/#marzo-2024/1/",
-        }
-
-        ,
+        },
         {
             id: 10,
             slug: "febrero-2024",
@@ -193,10 +191,9 @@ const MagazineSection = () => {
     const topMagazines = allMagazines.slice(0, 6);
     const carouselMagazines = allMagazines.slice(6);
 
+    // Fixed: Navigate to the correct route with the magazine slug
     const handleReadMagazine = (magazine) => {
-        if (magazine.embedUrl) {
-            navigate(`/revista/${magazine.slug}`);
-        }
+        navigate(`/revista/${magazine.slug}`);
     };
 
     const handleDownloadMagazine = (magazine) => {
@@ -484,6 +481,10 @@ const MagazineSection = () => {
                         <a href="/innova-shop">Regresar a Tienda</a>
                     </button>
                 </div>
+            </div>
+
+            <div className='mt-6'>
+                <Footer />
             </div>
         </section>
     );

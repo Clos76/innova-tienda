@@ -6,6 +6,7 @@ import { Bookmark, BookmarkCheck, X, Eye } from "lucide-react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import Footer from "../footer";
 
 const allImages = {
   "mayo-2025": import.meta.glob("/src/assets/revista/mayo-2025/*.jpg", { eager: true }),
@@ -423,6 +424,8 @@ export default function MagazineSwiper() {
             </div>
           </div>
         </div>
+
+       
       </div>
 
       <style jsx>{`
@@ -491,6 +494,8 @@ export default function MagazineSwiper() {
           }
         }
       `}</style>
+
+       <Footer/>
     </div>
   );
 }

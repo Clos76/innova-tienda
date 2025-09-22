@@ -30,10 +30,11 @@ import Categorias from './components/categorias';
 
 //magazine
 import MagazineSection from './components/revista/MagazineColumns';
-import MagazineFlip from './components/revista/MagazineReader';
-import MagazineSwiper from './components/revista/MagazineSwiper';
-
-
+ import PdfMagazineSwiper from './components/revista/DebugMagazinePdfSwiper'; // pdf testing debug with iframe, embed tag, conectivity test. 
+//import PdfMagazineSwiper from './components/revista/MagazineReader'; //--iframe viewer pdf working
+//import  MagazineSwiper from './components/revista/pdfMagazine';//--pdf not working testing pdf
+//import MagazineSwiper from './components/revista/MagazineSwiper'//--good one with no page flip effects jpg
+import Book from './components/revista/HTML_Flipbook' //--page flip effect not working with pdf only jpg
 
 function App() {
 
@@ -77,9 +78,15 @@ function App() {
         <Route path="/designer/:designerId/categories/:categoria" element={<ProductList />} />
         <Route path="/producto/:id" element={<ProductDetail />} />
 
-        {/** Magazine Routing */}
+        {/** Magazine Routing 
+         * 
+         * <Route path='/revista/:slug'  element={<PdfMagazineSwiper/>}/>
+         * 
+         * 
+        */}
           <Route path="/revista" element={<MagazineSection/>}/>
-          <Route path='/revista/:slug'  element={<MagazineSwiper/>}/>
+           <Route path='/revista/:slug'  element={< Book/>}/>
+
 
 
 

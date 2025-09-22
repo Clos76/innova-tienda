@@ -1,291 +1,505 @@
-import React, { useRef, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import HTMLFlipBook from "react-pageflip";
-import { ChevronLeft, ChevronRight, Bookmark, BookmarkCheck, X, Eye } from "lucide-react";
+import React, { useEffect, useState, useRef } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Keyboard } from "swiper/modules";
+import { Bookmark, BookmarkCheck, X, Eye, ZoomIn, ZoomOut, AlertCircle } from "lucide-react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
-export default function MagazineFlip() {
+// At the top of your file, make sure you have all imports:
+import { Document, Page, pdfjs } from 'react-pdf';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
+
+// Try this more reliable worker configuration:
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+
+// OR if that doesn't work, use the CDN version:
+// pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+
+// For this demo, we'll simulate the router params
+const useParams = () => ({ slug: "mayo-2025" });
+
+const allPdfs = {
+  "mayo-2025": "/revistaPDF/mayo-2025/magazine.pdf",
+  "marzo-2025": "/revistaPDF/marzo-2025/magazine.pdf",
+  "febrero-2025": "/revistaPDF/febrero-2025/magazine.pdf",
+  "diciembre-2024": "/revistaPDF/diciembre-2024/magazine.pdf",
+  "julio-2024": "/revistaPDF/julio-2024/magazine.pdf",
+  "junio-2024": "/revistaPDF/junio-2024/magazine.pdf",
+  "mayo-2024": "/revistaPDF/mayo-2024/magazine.pdf",
+  "abril-2024": "/revistaPDF/abril-2024/magazine.pdf",
+  "marzo-2024": "/revistaPDF/marzo-2024/magazine.pdf",
+  "febrero-2024": "/revistaPDF/febrero-2024/magazine.pdf",
+  "enero-2024": "/revistaPDF/enero-2024/magazine.pdf",
+  "diciembre-2023": "/revistaPDF/diciembre-2023/magazine.pdf",
+  "noviembre-2023": "/revistaPDF/noviembre-2023/magazine.pdf",
+};
+
+export default function PdfMagazineSwiper() {
   const { slug } = useParams();
-  const bookRef = useRef(null);
-  const [pages, setPages] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
+  const swiperRef = useRef(null);
+  const [numPages, setNumPages] = useState(null);
   const [bookmarks, setBookmarks] = useState([]);
+  const [currentSlide, setCurrentSlide] = useState(0);
   const [showBookmarkList, setShowBookmarkList] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [isTablet, setIsTablet] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [pdfError, setPdfError] = useState(null);
+  const [scale, setScale] = useState(1.0);
+  const [pageWidth, setPageWidth] = useState(null);
+  const [loadingMethod, setLoadingMethod] = useState('react-pdf'); // 'react-pdf' or 'iframe'
+  const [debugInfo, setDebugInfo] = useState({});
 
-  // Enhanced responsive sizing with better mobile handling
-  const [bookSize, setBookSize] = useState({ width: 500, height: 700 });
+  const pdfUrl = allPdfs[slug];
 
+  // Test PDF accessibility first
   useEffect(() => {
-    const handleResize = () => {
-      const screenWidth = window.innerWidth;
-      const screenHeight = window.innerHeight;
-      const isMobileScreen = screenWidth < 640; // Changed from 768 to 640 for better mobile detection
-      const isTabletScreen = screenWidth >= 640 && screenWidth < 1024;
+    const testPdfAccess = async () => {
+      if (!pdfUrl) return;
 
-      setIsMobile(isMobileScreen);
-      setIsTablet(isTabletScreen);
+      try {
+        console.log('Testing PDF access:', window.location.origin + pdfUrl);
+        const response = await fetch(pdfUrl);
+        const result = {
+          status: response.status,
+          ok: response.ok,
+          contentType: response.headers.get('content-type'),
+          size: (await response.blob()).size
+        };
 
-      let width, height;
+        setDebugInfo(result);
+        console.log('PDF test result:', result);
 
-      if (isMobileScreen) {
-        // Mobile: single page view with better viewport usage
-        const availableWidth = screenWidth - 16; // 8px padding on each side
-        const availableHeight = screenHeight - 200; // Account for header and controls
-        
-        width = Math.min(availableWidth, 350);
-        height = Math.min(width * 1.4, availableHeight);
-        
-        // Ensure minimum readable size
-        if (height < 400) {
-          height = 400;
-          width = height / 1.4;
+        if (!result.ok) {
+          setPdfError(new Error(`PDF not accessible: ${result.status}`));
+          setIsLoading(false);
         }
-      } else if (isTabletScreen) {
-        // Tablet: spread view
-        const availableWidth = screenWidth - 32;
-        const availableHeight = screenHeight - 180;
-        
-        width = Math.min(availableWidth, 800);
-        height = Math.min(width * 0.7, availableHeight);
-      } else {
-        // Desktop: full spread view
-        const availableWidth = screenWidth - 48;
-        const availableHeight = screenHeight - 160;
-        
-        width = Math.min(availableWidth, 1200);
-        height = Math.min(width * 0.7, availableHeight);
+      } catch (error) {
+        console.error('PDF test failed:', error);
+        setDebugInfo({ error: error.message });
+        setPdfError(error);
+        setIsLoading(false);
       }
-
-      setBookSize({ width, height });
     };
 
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    testPdfAccess();
+  }, [pdfUrl]);
+
+  // Responsive sizing
+  useEffect(() => {
+    const updatePageWidth = () => {
+      const containerWidth = window.innerWidth;
+      if (containerWidth < 640) {
+        setPageWidth(containerWidth - 32);
+        setScale(0.8);
+      } else if (containerWidth < 1024) {
+        setPageWidth(containerWidth - 64);
+        setScale(1.0);
+      } else {
+        setPageWidth(Math.min(800, containerWidth - 128));
+        setScale(1.2);
+      }
+    };
+
+    updatePageWidth();
+    window.addEventListener('resize', updatePageWidth);
+    return () => window.removeEventListener('resize', updatePageWidth);
   }, []);
 
-  // Load images
+
   useEffect(() => {
-    const images = allImages[slug];
-    if (!images) return;
+    // Add a timeout to catch if react-pdf never loads
+    const timeout = setTimeout(() => {
+      if (isLoading && !pdfError) {
+        console.warn('PDF loading timeout, switching to iframe');
+        setLoadingMethod('iframe');
+        setIsLoading(false);
+        setNumPages(24); // Estimate
+      }
+    }, 10000); // 10 second timeout
 
-    const pageArray = Object.keys(images)
-      .sort((a, b) => {
-        const getNumber = (str) => parseInt(str.match(/(\d+)\.jpg$/)[1], 10);
-        return getNumber(a) - getNumber(b);
-      })
-      .map((key) => images[key].default);
+    return () => clearTimeout(timeout);
+  }, [isLoading, pdfError]);
 
-    setPages(pageArray);
-  }, [slug]);
+  // Create slide groups for PDF pages
+  const createSlideGroups = () => {
+    if (!numPages) return [];
 
-  // Load bookmarks from localStorage
-  useEffect(() => {
-    const savedBookmarks = localStorage.getItem(`magazine-bookmarks-${slug}`);
-    if (savedBookmarks) {
-      setBookmarks(JSON.parse(savedBookmarks));
+    const groups = [];
+    groups.push([{ pageNum: 1 }]); // Cover page alone
+
+    for (let i = 2; i <= numPages; i += 2) {
+      const group = [{ pageNum: i }];
+      if (i + 1 <= numPages) {
+        group.push({ pageNum: i + 1 });
+      }
+      groups.push(group);
     }
-  }, [slug]);
 
-  // Save bookmarks to localStorage
-  const saveBookmarks = (newBookmarks) => {
-    setBookmarks(newBookmarks);
-    localStorage.setItem(`magazine-bookmarks-${slug}`, JSON.stringify(newBookmarks));
+    return groups;
   };
 
-  const handleBookmark = () => {
-    const pageToBookmark = currentPage;
-    const existingIndex = bookmarks.findIndex(b => b.page === pageToBookmark);
+  const slideGroups = createSlideGroups();
 
-    if (existingIndex >= 0) {
-      const newBookmarks = bookmarks.filter((_, index) => index !== existingIndex);
-      saveBookmarks(newBookmarks);
+  // Get current page info
+  const getCurrentPageInfo = () => {
+    if (slideGroups.length === 0 || currentSlide >= slideGroups.length) {
+      return { start: 1, end: 1, isCover: true };
+    }
+
+    const group = slideGroups[currentSlide];
+    const isCover = currentSlide === 0;
+
+    if (isCover) {
+      return { start: 1, end: 1, isCover: true };
+    }
+
+    const start = group[0].pageNum;
+    const end = group.length === 2 ? group[1].pageNum : start;
+    return { start, end, isCover: false };
+  };
+
+  const currentPageInfo = getCurrentPageInfo();
+
+  // In-memory bookmark storage
+  const [bookmarkStorage, setBookmarkStorage] = useState({});
+
+  useEffect(() => {
+    const saved = bookmarkStorage[`bookmarks-${slug}`];
+    if (saved) setBookmarks(saved);
+  }, [slug, bookmarkStorage]);
+
+  // Bookmark functions
+  const saveBookmarks = (newBookmarks) => {
+    setBookmarks(newBookmarks);
+    setBookmarkStorage(prev => ({
+      ...prev,
+      [`bookmarks-${slug}`]: newBookmarks
+    }));
+  };
+
+  const toggleBookmark = () => {
+    const pageToBookmark = currentPageInfo.start;
+    const exists = bookmarks.some(b => b.page === pageToBookmark);
+
+    if (exists) {
+      saveBookmarks(bookmarks.filter(b => b.page !== pageToBookmark));
     } else {
       const newBookmark = {
         page: pageToBookmark,
         timestamp: Date.now(),
-        title: `Page ${pageToBookmark + 1}`
+        title: `Página ${pageToBookmark}`
       };
-      const newBookmarks = [...bookmarks, newBookmark].sort((a, b) => a.page - b.page);
-      saveBookmarks(newBookmarks);
+      saveBookmarks([...bookmarks, newBookmark].sort((a, b) => a.page - b.page));
     }
   };
 
   const goToBookmark = (page) => {
-    if (bookRef.current) {
-      bookRef.current.pageFlip().flip(page);
+    if (swiperRef.current?.swiper) {
+      let slideIndex = page === 1 ? 0 : Math.floor((page - 2) / 2) + 1;
+      swiperRef.current.swiper.slideTo(slideIndex);
       setShowBookmarkList(false);
     }
   };
 
   const removeBookmark = (indexToRemove) => {
-    const newBookmarks = bookmarks.filter((_, index) => index !== indexToRemove);
-    saveBookmarks(newBookmarks);
+    saveBookmarks(bookmarks.filter((_, i) => i !== indexToRemove));
   };
 
-  const isCurrentPageBookmarked = bookmarks.some(b => b.page === currentPage);
+  const isCurrentPageBookmarked = bookmarks.some(b => b.page === currentPageInfo.start);
 
-  const handlePrevPage = () => {
-    if (bookRef.current) {
-      bookRef.current.pageFlip().flipPrev();
-    }
+  // Zoom functions
+  const zoomIn = () => setScale(prev => Math.min(prev + 0.2, 3.0));
+  const zoomOut = () => setScale(prev => Math.max(prev - 0.2, 0.5));
+
+  // Switch to iframe method
+  const switchToIframe = () => {
+    setLoadingMethod('iframe');
+    setIsLoading(false);
+    setNumPages(24); // Estimate for demo
   };
 
-  const handleNextPage = () => {
-    if (bookRef.current) {
-      bookRef.current.pageFlip().flipNext();
-    }
-  };
-
-  if (!pages.length) {
+  // Early returns for error states
+  if (!slug || !pdfUrl) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 px-4">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-slate-600 mx-auto mb-4"></div>
-          <p className="text-slate-700 text-base sm:text-lg">Loading magazine pages...</p>
+          <p className="text-slate-700 text-lg mb-4">Revista no encontrada.</p>
+          <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+            Regresar a ediciones
+          </button>
         </div>
       </div>
     );
   }
 
+  if (isLoading && loadingMethod === 'react-pdf') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4">
+        <div className="text-center max-w-lg">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-600 mx-auto mb-4"></div>
+          <p className="text-slate-700 text-lg">Cargando revista PDF...</p>
+          <p className="text-slate-500 text-sm mt-2">{slug}</p>
+          <p className="text-slate-400 text-xs mt-1 break-all">{pdfUrl}</p>
+
+          <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-left">
+            <h3 className="font-semibold mb-2 flex items-center">
+              <AlertCircle size={16} className="mr-2" />
+              Debug Info
+            </h3>
+            <div className="text-xs space-y-1">
+              <p>Status: {debugInfo.status || 'Testing...'}</p>
+              <p>Content-Type: {debugInfo.contentType || 'Unknown'}</p>
+              <p>Size: {debugInfo.size ? `${Math.round(debugInfo.size / 1024)}KB` : 'Unknown'}</p>
+              {debugInfo.error && <p className="text-red-600">Error: {debugInfo.error}</p>}
+            </div>
+          </div>
+
+          <button
+            onClick={switchToIframe}
+            className="mt-4 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm"
+          >
+            Switch to iframe method
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (pdfError && loadingMethod === 'react-pdf') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4">
+        <div className="text-center max-w-md">
+          <p className="text-slate-700 text-lg mb-2">Error cargando PDF con react-pdf</p>
+          <p className="text-slate-500 text-sm mb-4">
+            {pdfError?.message || 'Error desconocido'}
+          </p>
+          <div className="space-y-2">
+            <button
+              onClick={switchToIframe}
+              className="block bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg w-full"
+            >
+              Usar iframe method
+            </button>
+            <a
+              href={pdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
+            >
+              Ver PDF directamente
+            </a>
+            <button className="block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg w-full">
+              Regresar a ediciones
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Render iframe method if react-pdf fails
+  if (loadingMethod === 'iframe') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+        <div className="w-full px-2 sm:px-4 py-4 sm:py-6">
+          <div className="flex flex-col items-center max-w-6xl mx-auto">
+
+            {/* Header */}
+            <div className="w-full mb-4 sm:mb-6 text-center px-2">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800 mb-2">
+                Revista Digital PDF
+              </h1>
+              <p className="text-slate-600 text-sm sm:text-base">
+                Edición: {slug?.replace('-', ' ').toUpperCase()}
+              </p>
+              <div className="mt-2 text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded">
+                Usando método iframe (react-pdf falló)
+              </div>
+              <div className="mt-4">
+                <button className="bg-blue-400 hover:bg-blue-500 rounded-lg text-white px-4 py-2 text-sm sm:text-base transition-all duration-200 hover:shadow-lg">
+                  Regresar a ediciones
+                </button>
+              </div>
+            </div>
+
+            {/* PDF iframe fallback */}
+            <div className="w-full max-w-4xl bg-white rounded-lg shadow-xl overflow-hidden">
+              <iframe
+                src={pdfUrl}
+                width="100%"
+                height="800px"
+                className="border-0"
+                title={`PDF Magazine - ${slug}`}
+              />
+            </div>
+
+            {/* Simple navigation for iframe method */}
+            <div className="w-full max-w-4xl mt-6 space-y-3">
+              <div className="bg-white rounded-lg shadow-md p-4 text-center">
+                <p className="text-sm text-gray-600 mb-2">
+                  PDF cargado usando iframe. Use los controles del navegador PDF para navegar.
+                </p>
+                <div className="flex justify-center space-x-4">
+                  <a
+                    href={pdfUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm"
+                  >
+                    Abrir en nueva pestaña
+                  </a>
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm"
+                  >
+                    Reintentar react-pdf
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // REACT-PDF METHOD - with better error handling and timeout
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="w-full px-2 sm:px-4 py-4 sm:py-6">
-        <div className="flex flex-col items-center max-w-7xl mx-auto">
+        <div className="flex flex-col items-center max-w-6xl mx-auto">
 
-          {/* Magazine Header - More responsive */}
+          {/* Header */}
           <div className="w-full mb-4 sm:mb-6 text-center px-2">
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800 mb-2">
-              Revistas Digital
+              Revista Digital PDF
             </h1>
-            <p className="text-slate-600 text-sm sm:text-base break-words">
+            <p className="text-slate-600 text-sm sm:text-base">
               Edición: {slug?.replace('-', ' ').toUpperCase()}
             </p>
-            {!isMobile && (
-              <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                Vista de página doble. Haz clic en los bordes para navegar
-              </p>
-            )}
-
-            {/* Back button - more responsive */}
             <div className="mt-4">
-              <button className="bg-blue-400 hover:bg-blue-500 rounded-lg sm:rounded-xl text-white px-3 py-2 sm:px-4 sm:py-2 text-sm sm:text-base lg:text-lg transition-all duration-200 hover:shadow-lg">
-                <a href="/revista" className="block w-full h-full">
-                  Regresar a ediciones
-                </a>
+              <button className="bg-blue-400 hover:bg-blue-500 rounded-lg text-white px-4 py-2 text-sm sm:text-base transition-all duration-200 hover:shadow-lg">
+                Regresar a ediciones
               </button>
             </div>
           </div>
 
-          {/* FlipBook Container - Better responsive handling */}
-          <div className="relative mb-4 sm:mb-6 flex justify-center w-full">
-            <div className="overflow-hidden" style={{ 
-              maxWidth: '100vw',
-              display: 'flex',
-              justifyContent: 'center'
-            }}>
-              <HTMLFlipBook
-                width={isMobile ? bookSize.width : bookSize.width / 2}
-                height={bookSize.height}
-                ref={bookRef}
-                onFlip={(e) => setCurrentPage(e.data)}
-                showCover={true}
-                className="shadow-xl sm:shadow-2xl"
-                size="fixed"
-                minWidth={isMobile ? bookSize.width : bookSize.width / 2}
-                maxWidth={isMobile ? bookSize.width : bookSize.width / 2}
-                minHeight={bookSize.height}
-                maxHeight={bookSize.height}
-                drawShadow={true}
-                flippingTime={600}
-                usePortrait={isMobile}
-                mobileScrollSupport={true}
-                maxShadowOpacity={0.5}
-                startPage={0}
-                autoSize={false}
+          {/* PDF Document Container */}
+          <div className="w-full max-w-6xl mb-4 sm:mb-6 relative">
+            {/* Try to load PDF with react-pdf first */}
+            <div className="pdf-container">
+              <Swiper
+                ref={swiperRef}
+                onSlideChange={(swiper) => setCurrentSlide(swiper.activeIndex)}
+                navigation={{ prevEl: '.custom-prev', nextEl: '.custom-next' }}
+                pagination={{ type: "fraction", el: '.custom-pagination' }}
+                keyboard={{ enabled: true }}
+                spaceBetween={0}
+                slidesPerView={1}
+                modules={[Navigation, Pagination, Keyboard]}
+                className="pdf-magazine-swiper"
               >
-                {pages.map((src, index) => (
-                  <div
-                    key={index}
-                    className="page bg-white overflow-hidden"
-                    style={{
-                      margin: 0,
-                      padding: 0,
-                      border: "none",
-                      boxShadow: "none",
-                    }}
-                  >
-                    <img
-                      src={src}
-                      alt={`Page ${index + 1}`}
-                      className="w-full h-full object-contain"
-                      loading="lazy"
-                      style={{ display: "block" }}
-                    />
-                  </div>
+                {slideGroups.map((group, slideIndex) => (
+                  <SwiperSlide key={slideIndex}>
+                    <div className="flex justify-center items-stretch w-full gap-2">
+                      {group.map((pageData, pageIndexInGroup) => {
+                        const isLeftPage = pageIndexInGroup === 0;
+                        const isCoverPage = slideIndex === 0;
+                        const isSinglePage = group.length === 1;
+
+                        return (
+                          <div
+                            key={pageData.pageNum}
+                            className={`relative bg-white overflow-hidden ${isCoverPage || isSinglePage
+                              ? 'mx-auto rounded-lg shadow-xl'
+                              : isLeftPage
+                                ? 'rounded-l-lg shadow-lg'
+                                : 'rounded-r-lg shadow-lg'
+                              }`}
+                          >
+                            {/* Mock page for demo since react-pdf isn't available */}
+                            <div
+                              className="bg-white border shadow-lg flex flex-col items-center justify-center text-gray-600"
+
+                            >
+                              <Document
+                                file={pdfUrl}
+                                onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+                                loading={<div>Cargando PDF...</div>}
+                                error={<div>Error cargando PDF</div>}
+                              >
+                                <Page
+                                  pageNumber={pageData.pageNum}
+                                  width={pageWidth}
+                                  scale={scale}
+                                  loading={<div>Cargando página...</div>}
+                                  error={<div>Error cargando página</div>}
+                                />
+                              </Document>
+                              <div className="text-4xl font-bold mb-4">{pageData.pageNum}</div>
+                              <div className="text-sm">Página de revista</div>
+                              <div className="text-xs text-gray-400 mt-2">
+                                {isCoverPage ? 'Portada' : 'Contenido'}
+                              </div>
+                            </div>
+                            <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
+                              {pageData.pageNum}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </SwiperSlide>
                 ))}
-              </HTMLFlipBook>
+              </Swiper>
             </div>
-          </div>
 
-          {/* Enhanced Navigation Controls - Better mobile layout */}
-          <div className="w-full max-w-2xl px-2">
-            {/* Main Navigation */}
-            <div className="flex items-center justify-between bg-white rounded-lg shadow-md p-2 sm:p-4 mb-3 sm:mb-4">
-              <button
-                onClick={handlePrevPage}
-                disabled={currentPage === 0}
-                className="flex items-center justify-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 bg-slate-600 text-white rounded-md sm:rounded-lg hover:bg-slate-700 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors duration-200 min-w-0 flex-shrink-0"
-              >
-                <ChevronLeft size={isMobile ? 14 : 20} />
-                <span className="hidden sm:inline text-sm sm:text-base">Previo</span>
+            {/* Controls */}
+            <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-10 flex space-x-2">
+              <button onClick={zoomOut} className="p-2 sm:p-3 rounded-full bg-white shadow-lg hover:bg-gray-50">
+                <ZoomOut size={16} />
               </button>
-
-              <div className="text-center flex-1 mx-2 sm:mx-4 min-w-0">
-                <div className="text-xs sm:text-sm lg:text-base font-medium text-slate-800 truncate">
-                  Página {currentPage + 1} de {pages.length}
-                </div>
-                <div className="w-full bg-slate-200 rounded-full h-1.5 sm:h-2 mt-1 sm:mt-2">
-                  <div
-                    className="bg-slate-600 h-1.5 sm:h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${((currentPage + 1) / pages.length) * 100}%` }}
-                  ></div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Método de carga:</span>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => setLoadingMethod('react-pdf')}
+                    className={`px-3 py-1 text-xs rounded ${loadingMethod === 'react-pdf' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                  >
+                    react-pdf
+                  </button>
+                  <button
+                    onClick={switchToIframe}
+                    className={`px-3 py-1 text-xs rounded ${loadingMethod === 'iframe' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                  >
+                    iframe
+                  </button>
                 </div>
               </div>
-
-              <button
-                onClick={handleNextPage}
-                disabled={currentPage === pages.length - 1}
-                className="flex items-center justify-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 bg-slate-600 text-white rounded-md sm:rounded-lg hover:bg-slate-700 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors duration-200 min-w-0 flex-shrink-0"
-              >
-                <span className="hidden sm:inline text-sm sm:text-base">Próximo</span>
-                <ChevronRight size={isMobile ? 14 : 20} />
-              </button>
             </div>
 
-            {/* Enhanced Bookmark Controls - Better mobile layout */}
-            <div className="bg-white rounded-lg shadow-md p-2 sm:p-4">
-              <div className="flex items-center justify-between mb-2 sm:mb-3">
-                <div className="flex items-center space-x-1 sm:space-x-2 min-w-0">
+            {/* Bookmark Section */}
+            <div className="bg-white rounded-lg shadow-md p-3 sm:p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-2">
                   {isCurrentPageBookmarked ? (
-                    <BookmarkCheck className="text-amber-500 flex-shrink-0" size={isMobile ? 16 : 20} />
+                    <BookmarkCheck className="text-amber-500" size={18} />
                   ) : (
-                    <Bookmark className="text-slate-400 flex-shrink-0" size={isMobile ? 16 : 20} />
+                    <Bookmark className="text-slate-400" size={18} />
                   )}
-                  <span className="text-xs sm:text-sm lg:text-base font-medium text-slate-700 truncate">
-                    Marcador ({bookmarks.length})
+                  <span className="text-sm sm:text-base font-medium text-slate-700">
+                    Marcadores ({bookmarks.length})
                   </span>
                 </div>
 
-                <div className="flex space-x-1 sm:space-x-2 flex-shrink-0">
+                <div className="flex space-x-2">
                   <button
-                    onClick={handleBookmark}
-                    className={`px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm rounded-md transition-colors duration-200 ${
-                      isCurrentPageBookmarked
-                        ? "bg-red-100 text-red-700 hover:bg-red-200"
-                        : "bg-amber-100 text-amber-700 hover:bg-amber-200"
-                    }`}
+                    onClick={toggleBookmark}
+                    className={`px-3 py-1.5 text-sm rounded-md ${isCurrentPageBookmarked
+                      ? "bg-red-100 text-red-700 hover:bg-red-200"
+                      : "bg-amber-100 text-amber-700 hover:bg-amber-200"
+                      }`}
                   >
                     {isCurrentPageBookmarked ? "Quitar" : "Agregar"}
                   </button>
@@ -293,34 +507,28 @@ export default function MagazineFlip() {
                   {bookmarks.length > 0 && (
                     <button
                       onClick={() => setShowBookmarkList(!showBookmarkList)}
-                      className="flex items-center space-x-1 px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors duration-200"
+                      className="flex items-center space-x-1 px-3 py-1.5 text-sm bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200"
                     >
-                      <Eye size={isMobile ? 12 : 14} />
+                      <Eye size={14} />
                       <span className="hidden sm:inline">{showBookmarkList ? "Ocultar" : "Ver"}</span>
                     </button>
                   )}
                 </div>
               </div>
 
-              {/* Bookmark List - Mobile optimized */}
               {showBookmarkList && bookmarks.length > 0 && (
-                <div className="border-t pt-2 sm:pt-3">
-                  <div className="max-h-32 sm:max-h-40 overflow-y-auto">
-                    <div className="space-y-1 sm:space-y-2">
+                <div className="border-t pt-3">
+                  <div className="max-h-40 overflow-y-auto">
+                    <div className="space-y-2">
                       {bookmarks.map((bookmark, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center justify-between p-1.5 sm:p-2 bg-slate-50 rounded-md hover:bg-slate-100 transition-colors duration-200"
-                        >
+                        <div key={index} className="flex items-center justify-between p-2 bg-slate-50 rounded-md hover:bg-slate-100">
                           <button
                             onClick={() => goToBookmark(bookmark.page)}
-                            className="flex items-center space-x-1 sm:space-x-2 text-left flex-1 min-w-0"
+                            className="flex items-center space-x-2 text-left flex-1"
                           >
-                            <BookmarkCheck className="text-amber-500 flex-shrink-0" size={isMobile ? 12 : 16} />
-                            <div className="min-w-0 flex-1">
-                              <div className="text-xs sm:text-sm font-medium text-slate-700 truncate">
-                                Página {bookmark.page + 1}
-                              </div>
+                            <BookmarkCheck className="text-amber-500" size={16} />
+                            <div>
+                              <div className="text-sm font-medium text-slate-700">Página {bookmark.page}</div>
                               <div className="text-xs text-slate-500 hidden sm:block">
                                 {new Date(bookmark.timestamp).toLocaleDateString()}
                               </div>
@@ -328,42 +536,33 @@ export default function MagazineFlip() {
                           </button>
                           <button
                             onClick={() => removeBookmark(index)}
-                            className="p-1 text-slate-400 hover:text-red-500 transition-colors duration-200 flex-shrink-0"
+                            className="p-1 text-slate-400 hover:text-red-500"
                           >
-                            <X size={isMobile ? 12 : 14} />
+                            <X size={14} />
                           </button>
                         </div>
                       ))}
                     </div>
                   </div>
-
-                  {bookmarks.length > 3 && (
-                    <div className="text-xs text-slate-500 text-center mt-1 sm:mt-2">
-                      Desplázate para ver todos los marcadores
-                    </div>
-                  )}
                 </div>
               )}
 
               {bookmarks.length === 0 && showBookmarkList && (
-                <div className="border-t pt-2 sm:pt-3 text-center text-xs sm:text-sm text-slate-500">
-                  Aún no hay marcadores. Haz clic en «Agregar» para marcar esta página.
+                <div className="border-t pt-3 text-center text-sm text-slate-500">
+                  No hay marcadores aún.
                 </div>
               )}
             </div>
-          </div>
 
-          {/* Instructions - More responsive */}
-          <div className="mt-3 sm:mt-4 text-center px-4 max-w-sm sm:max-w-md">
-            {isMobile ? (
-              <div className="text-xs sm:text-sm text-slate-500">
-                💡 Tip: toca los bordes de las páginas para pasar, o usa los botones de navegación.
+            {/* Debug Info */}
+            <div className="w-full max-w-4xl bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <h3 className="font-semibold mb-2">🔧 Troubleshooting</h3>
+              <div className="text-sm space-y-1">
+                <p><strong>Current method:</strong> {loadingMethod}</p>
+                <p><strong>PDF URL:</strong> {pdfUrl}</p>
+                <p><strong>Debug info:</strong> {JSON.stringify(debugInfo)}</p>
               </div>
-            ) : (
-              <div className="text-xs sm:text-sm text-slate-500">
-                📖 Haz clic en los bordes de la página o usa las flechas del teclado para navegar.
-              </div>
-            )}
+            </div>
           </div>
         </div>
       </div>
