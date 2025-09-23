@@ -15,6 +15,7 @@ import {
   ZoomOut,
 } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
+import MAGAZINES from "./data/magazines";
 
 
 // Worker config
@@ -24,60 +25,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 // Available magazines
-const MAGAZINES = {
-  "mayo-2025": {
-    path: "/revistaPDF/mayo-2025/magazine.pdf",
-    title: "Mayo 2025",
-  },
-  "marzo-2025": {
-    path: "/revistaPDF/marzo-2025/magazine.pdf",
-    title: "Marzo 2025",
-  },
-  "febrero-2025": {
-    path: "/revistaPDF/febrero-2025/magazine.pdf",
-    title: "Febrero 2025",
-  },
-  "diciembre-2024": {
-    path: "/revistaPDF/diciembre-2024/magazine.pdf",
-    title: "Diciembre 2024",
-  },
-  "julio-2024": {
-    path: "/revistaPDF/julio-2024/magazine.pdf",
-    title: "Julio 2024",
-  },
-  "junio-2024": {
-    path: "/revistaPDF/junio-2024/magazine.pdf",
-    title: "Junio 2024",
-  },
-  "mayo-2024": {
-    path: "/revistaPDF/mayo-2024/magazine.pdf",
-    title: "Mayo 2024",
-  },
-  "abril-2024": {
-    path: "/revistaPDF/abril-2024/magazine.pdf",
-    title: "Abril 2024",
-  },
-  "marzo-2024": {
-    path: "/revistaPDF/marzo-2024/magazine.pdf",
-    title: "Marzo 2024",
-  },
-  "febrero-2024": {
-    path: "/revistaPDF/febrero-2024/magazine.pdf",
-    title: "Febrero 2024",
-  },
-  "enero-2024": {
-    path: "/revistaPDF/enero-2024/magazine.pdf",
-    title: "Enero 2024",
-  },
-  "diciembre-2023": {
-    path: "/revistaPDF/diciembre-2023/magazine.pdf",
-    title: "Diciembre 2023",
-  },
-  "noviembre-2023": {
-    path: "/revistaPDF/noviembre-2023/magazine.pdf",
-    title: "Noviembre 2023",
-  },
-};
+
 
 // ForwardRef component for flipbook pages
 const FlipBookPage = React.forwardRef((props, ref) => (
@@ -90,6 +38,9 @@ const Book = () => {
 
   const [bookSize, setBookSize] = useState({ width: 400, height: 520 });
   const containerRef = useRef(null);
+//loading section
+  const [isLoading, setIsLoading] = useState(true);
+ 
 
   useEffect(() => {
     const updateSize = () => {
@@ -146,7 +97,7 @@ const Book = () => {
   const bookmarkNavigatingRef = useRef(false);
 
   // Magazine data
-  const currentMagazine = MAGAZINES[slug] ? slug : "abril-2024"; // fallback
+  const currentMagazine = MAGAZINES[slug] ? slug : "mayo-2025"; // fallback
   const magazineExists = MAGAZINES[currentMagazine];
 
   // Bookmarks state - using new array format like the Swiper version
@@ -377,6 +328,7 @@ const Book = () => {
 
   const handleDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
+    setIsLoading(false); //done loading when PDF is ready
   };
 
   // COMPLETELY BLOCK handleFlip during bookmark navigation
