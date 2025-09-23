@@ -1,4 +1,17 @@
 const MAGAZINES = {
+
+    "septiembre-2025": {
+    id: 1,
+    slug: "septiembre-2025",
+    path: "/revistaPDF/septiembre-2025/magazine.pdf",
+    title: "Septiembre 2025",
+    titleMain: "Innovamoda Fashion Magazine Mayo",
+    description:
+      "Es la revista digital de InnovaModa, un espacio dedicado a resaltar el talento, la creatividad y la innovación de la industria de la moda.",
+    date: "Septiembre 2025",
+    downloadUrl: "#",
+    featured: true,
+  },
   "mayo-2025": {
     id: 1,
     slug: "mayo-2025",
@@ -9,7 +22,7 @@ const MAGAZINES = {
       "Es la revista digital de InnovaModa, un espacio dedicado a resaltar el talento, la creatividad y la innovación de la industria de la moda.",
     date: "Mayo 2025",
     downloadUrl: "#",
-    featured: true,
+    featured: false,
   },
   "marzo-2025": {
     id: 2,
